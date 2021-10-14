@@ -86,7 +86,7 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
     switch(ch)
     {
         case 97: //a
-            if(mapa[*x-1][*y] != '#')
+            if(mapa[*y-1][*x-2] != '#')
             {
                 gotoxy(*x,*y);
                 textbackground(BLACK);
@@ -99,7 +99,7 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
             break;
 
         case 100: //d
-            if(mapa[*x+1][*y] != '#')
+            if(mapa[*y-1][*x] != '#')
             {
                 gotoxy(*x,*y);
                 textbackground(BLACK);
@@ -112,7 +112,7 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
             break;
 
         case 115: //s
-            if(mapa[*x][*y+1] != '#')
+            if(mapa[*y][*x-1] != '#')
             {
                 gotoxy(*x,*y);
                 textbackground(BLACK);
@@ -125,7 +125,7 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
             break;
 
         case 119: //w
-            if(mapa[*x][*y - 1] != '#')
+            if(mapa[*y-2][*x-1] != '#')
             {
                 gotoxy(*x,*y);
                 textbackground(BLACK);
