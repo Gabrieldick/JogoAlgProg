@@ -72,7 +72,7 @@ void cria_mapa()
 int main()
 {
       int option;
-      char nome[C];
+      char nome[C] = {"mapa1.txt"};
 
       while(1)
       {
