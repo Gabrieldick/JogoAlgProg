@@ -4,55 +4,64 @@
 #include <time.h>
 #include <windows.h>
 #include <stdlib.h>
-#define TamX 11
-#define TamY 11
+#define TamX 12
+#define TamY 12
 
 void anda(int *x, int *y, int ch, char mapa[TamX][TamY])
 {
     switch(ch)
     {
-        case 97:
-            clrscr();
+        case 97: //a
             if(mapa[*x-1][*y] != '#')
             {
-                mapa[*x][*y] =  ' ';
+                gotoxy(*x,*y);
+                textbackground(BLACK);
+                printf(" ");
                 *x= *x - 1;
-                mapa[*x][*y] =  'O';
+                gotoxy(*x,*y);
+                textbackground(BLUE);
+                printf(" ");
             }
-            montaMapa(mapa);
             break;
 
-        case 100:
-            clrscr();
+        case 100: //d
             if(mapa[*x+1][*y] != '#')
             {
-                mapa[*x][*y] =  ' ';
+                gotoxy(*x,*y);
+                textbackground(BLACK);
+                printf(" ");
                 *x= *x + 1;
-                mapa[*x][*y] =  'O';
+                gotoxy(*x,*y);
+                textbackground(BLUE);
+                printf(" ");
             }
-            montaMapa(mapa);
             break;
 
-        case 115:
-            clrscr();
+        case 115: //s
             if(mapa[*x][*y+1] != '#')
             {
-                mapa[*x][*y] =  ' ';
+                gotoxy(*x,*y);
+                textbackground(BLACK);
+                printf(" ");
                 *y= *y + 1;
-                mapa[*x][*y] =  'O';
+                gotoxy(*x,*y);
+                textbackground(BLUE);
+                printf(" ");
             }
-            montaMapa(mapa);
             break;
 
-        case 119:
-            clrscr();
+        case 119: //w
             if(mapa[*x][*y - 1] != '#')
             {
-                mapa[*x][*y] =  ' ';
+                gotoxy(*x,*y);
+                textbackground(BLACK);
+                printf(" ");
                 *y = *y - 1;
-                mapa[*x][*y] =  'O';
+                gotoxy(*x,*y);
+                textbackground(BLUE);
+                printf(" ");
+
             }
-            montaMapa(mapa);
             break;
 
         case 27:
@@ -62,6 +71,7 @@ void anda(int *x, int *y, int ch, char mapa[TamX][TamY])
 
     }
 }
+
 
 void atira(int x, int y, int ch)
 {
@@ -91,12 +101,12 @@ void montaMapa(char mapa[TamX][TamY])
     {
         for(j = 0; j < TamY; j++)
         {
-            if(mapa[j][i] == '#')
+            if(mapa[i][j] == '#')
                 textbackground(WHITE);
             else
                 textbackground(BLACK);
-
-            printf(" %c ", mapa[j][i]);
+            gotoxy(i, j);
+            printf("%c", mapa[i][j]);
         }
         printf("\n");
     }
