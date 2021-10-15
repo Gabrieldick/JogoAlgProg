@@ -13,13 +13,13 @@
 int main(void)
 {
     setlocale(LC_CTYPE, "");
-    int option = 1;
+    int option = 0;
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
     int ch = 0;
     int x = 2, y = 2;
 
-    while (option != 2)
+    while (option != 1)
     {
         option = menu();
 
@@ -28,9 +28,7 @@ int main(void)
             case 1:
                 le_nome(nome);
                 printf("\n");
-                break;
-
-            case 2:
+                Sleep(1000);
                 clrscr();
                 exibe_mapa(&x, &y, mapa, nome);
                 printf("\n");
@@ -40,7 +38,7 @@ int main(void)
                 break;
 
             default:
-                printf("\nopcao invalida, digite novamente!\n");
+                printf("\nOpção invalida, digite novamente!\n");
         }
     }
 
@@ -48,9 +46,15 @@ int main(void)
 
     while (ch != 27)
     {
-        ch = getch();
-        anda(&x, &y, ch, mapa);
-        // atira(x, y, ch);
+
+        if(kbhit())
+            {
+                ch = getch();
+                anda(&x, &y, ch, mapa);
+                atira(x, y, ch, mapa, &x, &y);
+            }
     }
     system("pause");
+
+    return 0;
 }

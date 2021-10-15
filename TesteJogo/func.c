@@ -39,7 +39,7 @@ void exibe_mapa(int *x, int *y, char mapa[LIN][COL], char nome[])
                     {
                         textbackground(BLACK);
                         printf("%c", mapa[i][j]); //testar se a impressão esta correta
-                  }
+                    }
 
             }
 
@@ -52,9 +52,25 @@ void exibe_mapa(int *x, int *y, char mapa[LIN][COL], char nome[])
 
 void le_nome(char nome[])
 {
-      printf("Digite o nome do arquivo com extensao: ");
-      fgets(nome, C, stdin);
-      nome[strcspn(nome, "\n")] = 0;
+    int i;
+    do
+    {
+        printf("\nSelecione o nível desejado (1 ou 2) para começar o jogo: ");
+        scanf("%d", &i);
+        if ((i!=1 && i!=2)) printf("\nDesculpe, não foi encontrado este nível, selecione níveis de 1 a 2\n");
+    } while (i!=1 && i!=2);
+
+    switch(i)
+    {
+        case 1:
+            strcpy(nome, "mapa1.txt");
+            break;
+        case 2:
+            strcpy(nome, "mapa2.txt");
+            break;
+
+    }
+
 
 }
 
@@ -62,9 +78,8 @@ int menu()
 {
       int option;
 
-      printf("Selecione uma das opções: \n");
-      printf("1 - Digitar o nome do mapa a ser aberto\n");
-      printf("2 - Exibir o mapa selecionado e começar o jogo\n");
+      printf("\nSelecione uma das opções: \n");
+      printf("1 - Selecionar o mapa desejado: \n");
 
       printf("\nOpção selecionada: ");
 
@@ -74,12 +89,6 @@ int menu()
       return option;
 
 }
-void cria_mapa()
-{
-
-}
-
-
 
 void anda(int *x, int *y, int ch, char mapa[LIN][COL])
 {
@@ -147,23 +156,30 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
 }
 
 
-void atira(int x, int y, int ch)
+void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y)
 {
+    int i;
     if(ch == 32)
     {
-        int i;
-        for(i = 1; i < 21; i++)
+        for(i=0; i<=58; i++)
         {
-            clrscr();
-            gotoxy(x, y);
-            puts("O");
-            gotoxy(x, y +i);
-            puts(".");
-            Sleep(1);
+            if(mapa[yb-1][xb] != '#')
+                {
+                    gotoxy(xb+1, yb);
+                    textbackground(BLACK);
+                    printf("x");
+                    Sleep(25);
+                    gotoxy(xb+1, yb);
+                    printf(" ");
+                    xb++;
+                }
+            if(kbhit())
+            {
+                ch = getch();
+                anda(&*x, &*y, ch, mapa);
+            }
         }
-        clrscr();
-        gotoxy(x, y);
-        puts("O");
+
     }
 
 }
