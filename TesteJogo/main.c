@@ -9,16 +9,20 @@
 #define LIN 23
 #define COL 61
 #define C 50
+#define QtdNinjas 5
 
 int main(void)
 {
+     srand(time(NULL));
     setlocale(LC_CTYPE, "");
     int option = 0;
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
-    int ch = 0;
+    char ch = 0;
     int x = 2, y = 2;
+    int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas]={0};
 
+    hidecursor();
     while (option != 1)
     {
         option = menu();
@@ -30,7 +34,8 @@ int main(void)
                 printf("\n");
                 Sleep(1000);
                 clrscr();
-                exibe_mapa(&x, &y, mapa, nome);
+                textcolor(BLACK);
+                exibe_mapa(&x, &y, mapa, nome, NINJAx, NINJAy);
                 printf("\n");
                 break;
 
@@ -38,11 +43,9 @@ int main(void)
                 break;
 
             default:
-                printf("\nOpção invalida, digite novamente!\n");
+                printf("\nOpção invalida, digite novamente!\n\n");
         }
     }
-
-    textcolor(WHITE);
 
     while (ch != 27)
     {
@@ -51,7 +54,8 @@ int main(void)
             {
                 ch = getch();
                 anda(&x, &y, ch, mapa);
-                atira(x, y, ch, mapa, &x, &y);
+                anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
+                atira(x, y, ch, mapa, &x, &y, ninja_morto);
             }
     }
     system("pause");

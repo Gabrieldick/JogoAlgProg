@@ -5,10 +5,17 @@
 #include <windows.h>
 #include <conio2.h>
 #include <string.h>
+#include <ctype.h>
 #define LIN 23
 #define COL 61
 #define C 50
-
+#define INICIO 1
+#define FIM 4
+#define QtdNinjas 5
+typedef struct
+{
+    int x, y;
+}NINJA;
 //Limpa o buffer do teclado
 void flush_in()
 {
@@ -16,9 +23,9 @@ void flush_in()
       while( (ch = fgetc(stdin)) != EOF && ch != '\n' ){}
 }
 
-void exibe_mapa(int *x, int *y, char mapa[LIN][COL], char nome[])
+void exibe_mapa(int *x, int *y, char mapa[LIN][COL], char nome[],  int NINJAx[], int NINJAy[])
 {
-      int i, j;
+      int i, j, n=0;
       FILE *arq;
 
       arq=fopen(nome, "r");
@@ -31,10 +38,23 @@ void exibe_mapa(int *x, int *y, char mapa[LIN][COL], char nome[])
             {
                   fscanf(arq,"%c", &mapa[i][j]);
                   if(mapa[i][j]=='#')
-                  {
+                    {
                       textbackground(WHITE);
                       printf(" ");
-                  }
+                    }
+                  else if(mapa[i][j]=='J')
+                    {
+                        textbackground(YELLOW);
+                        printf(" ");
+                    }
+                    else if(mapa[i][j]=='N')
+                    {
+                        NINJAx[n] = wherex();
+                        NINJAy[n] = wherey();
+                        n++;
+                        textbackground(DARKGRAY);
+                        printf(" ");
+                    }
                   else
                     {
                         textbackground(BLACK);
@@ -78,7 +98,7 @@ int menu()
 {
       int option;
 
-      printf("\nSelecione uma das opções: \n");
+      printf("Selecione uma das opções: \n");
       printf("1 - Selecionar o mapa desejado: \n");
 
       printf("\nOpção selecionada: ");
@@ -90,11 +110,12 @@ int menu()
 
 }
 
-void anda(int *x, int *y, int ch, char mapa[LIN][COL])
+void anda(int *x, int *y, char ch, char mapa[LIN][COL])
 {
-    switch(ch)
+    switch(toupper(ch))
     {
-        case 97: //a
+        case 75: // ArrowLeft
+        case 'A': //a
             if(mapa[*y-1][*x-2] != '#')
             {
                 gotoxy(*x,*y);
@@ -102,12 +123,13 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
                 printf(" ");
                 *x= *x - 1;
                 gotoxy(*x,*y);
-                textbackground(BLUE);
+                textbackground(YELLOW);
                 printf(" ");
             }
             break;
 
-        case 100: //d
+        case 77: // ArrowRight
+        case 'D': //d
             if(mapa[*y-1][*x] != '#')
             {
                 gotoxy(*x,*y);
@@ -115,12 +137,13 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
                 printf(" ");
                 *x= *x + 1;
                 gotoxy(*x,*y);
-                textbackground(BLUE);
+                textbackground(YELLOW);
                 printf(" ");
             }
             break;
 
-        case 115: //s
+        case 80: // ArrowDown
+        case 'S': //s
             if(mapa[*y][*x-1] != '#')
             {
                 gotoxy(*x,*y);
@@ -128,12 +151,13 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
                 printf(" ");
                 *y= *y + 1;
                 gotoxy(*x,*y);
-                textbackground(BLUE);
+                textbackground(YELLOW);
                 printf(" ");
             }
             break;
 
-        case 119: //w
+        case 72: // ArrowUp
+        case 'W': //w
             if(mapa[*y-2][*x-1] != '#')
             {
                 gotoxy(*x,*y);
@@ -141,7 +165,7 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
                 printf(" ");
                 *y = *y - 1;
                 gotoxy(*x,*y);
-                textbackground(BLUE);
+                textbackground(YELLOW);
                 printf(" ");
 
             }
@@ -156,9 +180,9 @@ void anda(int *x, int *y, int ch, char mapa[LIN][COL])
 }
 
 
-void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y)
+void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[])
 {
-    int i;
+    int i, n;
     if(ch == 32)
     {
         for(i=0; i<=58; i++)
@@ -167,10 +191,18 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y)
                 {
                     gotoxy(xb+1, yb);
                     textbackground(BLACK);
+                    textcolor(LIGHTGRAY);
                     printf("x");
                     Sleep(25);
                     gotoxy(xb+1, yb);
                     printf(" ");
+                    for(n=0; n<QtdNinjas; n++)
+                    {
+                        if(xb==NINJAx && yb==NINJAy)
+                        {
+                            ninja_morto[n]=1;
+                        }
+                    }
                     xb++;
                 }
             if(kbhit())
@@ -184,3 +216,89 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y)
 
 }
 
+void hidecursor()
+{
+   HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+   CONSOLE_CURSOR_INFO info;
+   info.dwSize = 100;
+   info.bVisible = FALSE;
+   SetConsoleCursorInfo(consoleHandle, &info);
+}
+
+
+    void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto[])
+{
+    int mov_ninja, valid_move, n=0;
+    for(n=0; n<QtdNinjas; n++)
+    {
+        if (ninja_morto[n]!=1)
+        {
+            mov_ninja = round(1 + ( (float)rand() / RAND_MAX) * (4 - 1));
+            do
+            {
+                switch(mov_ninja)
+                {
+                    case 1://a
+                        if(mapa[NINJAy[n] -1][NINJAx[n] -2] != '#')
+                        {
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(BLACK);
+                            printf(" ");
+                            NINJAx[n] = NINJAx[n]  - 1;
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(DARKGRAY);
+                            printf(" ");
+                            valid_move = 1;
+                        }
+                        break;
+
+                    case 2://d
+                        if(mapa[NINJAy[n]-1][NINJAx[n] ] != '#')
+                        {
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(BLACK);
+                            printf(" ");
+                            NINJAx[n] = NINJAx[n]  + 1;
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(DARKGRAY);
+                            printf(" ");
+                            valid_move = 1;
+                        }
+                        break;
+
+                    case 3://s
+                        if(mapa[NINJAy[n]][NINJAx[n] -1] != '#')
+                        {
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(BLACK);
+                            printf(" ");
+                          NINJAy[n]= NINJAy[n] + 1;
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(DARKGRAY);
+                            printf(" ");
+                            valid_move = 1;
+                        }
+                        break;
+
+                    case 4://w
+                        if(mapa[NINJAy[n]-2][NINJAx[n] -1] != '#')
+                        {
+                            gotoxy(NINJAx[n] ,NINJAy[n]);
+                            textbackground(BLACK);
+                            printf(" ");
+                           NINJAy[n] = NINJAy[n] - 1;
+                            gotoxy(NINJAx[n] ,NINJAy[n] );
+                            textbackground(DARKGRAY);
+                            printf(" ");
+                            valid_move = 1;
+                        }
+                        break;
+
+                    default:
+                        valid_move = 0;
+                        break;
+                }
+            }while(valid_move==0);
+        }
+    }
+}
