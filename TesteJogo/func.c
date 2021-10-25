@@ -6,12 +6,15 @@
 #include <conio2.h>
 #include <string.h>
 #include <ctype.h>
+#define TIME_GAME 1
 #define LIN 23
 #define COL 61
 #define C 50
 #define INICIO 1
 #define FIM 4
 #define QtdNinjas 5
+
+
 typedef struct
 {
     clock_t comeco, fim;
@@ -208,10 +211,11 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJ
                 }
             tempo->fim = clock();
             tempo->duracao = (double)(tempo->fim - tempo->comeco)/CLOCKS_PER_SEC;
-            if (tempo->duracao>=1 && *flag_ninja!=1)
+            if (tempo->duracao>=TIME_GAME)
             {
                 anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
                 *flag_ninja = 1;
+                tempo->comeco = clock();
             }
             if(kbhit())
             {

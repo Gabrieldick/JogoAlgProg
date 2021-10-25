@@ -10,6 +10,7 @@
 #define COL 61
 #define C 50
 #define QtdNinjas 5
+#define TIME_GAME 1
 
 typedef struct
 {
@@ -70,7 +71,7 @@ int main()
                 atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja);
             }
 
-        if (tempo.duracao>=1 && flag_ninja!=1)
+        if (tempo.duracao>=TIME_GAME && flag_ninja!=1)
         {
             anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
             flag_ninja = 1;
