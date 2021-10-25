@@ -12,10 +12,7 @@
 #define INICIO 1
 #define FIM 4
 #define QtdNinjas 5
-typedef struct
-{
-    int x, y;
-}NINJA;
+
 //Limpa o buffer do teclado
 void flush_in()
 {
@@ -198,7 +195,7 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJ
                     printf(" ");
                     for(n=0; n<QtdNinjas; n++)
                     {
-                        if(xb==NINJAx && yb==NINJAy)
+                        if(xb==NINJAx[n] && yb==NINJAy[n])
                         {
                             ninja_morto[n]=1;
                         }
@@ -226,7 +223,7 @@ void hidecursor()
 }
 
 
-    void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto[])
+void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto[])
 {
     int mov_ninja, valid_move, n=0;
     for(n=0; n<QtdNinjas; n++)

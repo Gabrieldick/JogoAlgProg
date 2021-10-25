@@ -55,7 +55,7 @@ int main(void)
                 ch = getch();
                 anda(&x, &y, ch, mapa);
                 anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
-                atira(x, y, ch, mapa, &x, &y, ninja_morto);
+                atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto);
             }
     }
     system("pause");
