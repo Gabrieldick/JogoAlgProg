@@ -12,7 +12,11 @@
 #define INICIO 1
 #define FIM 4
 #define QtdNinjas 5
-
+typedef struct
+{
+    clock_t comeco, fim;
+    double duracao;
+}TEMPO;
 //Limpa o buffer do teclado
 void flush_in()
 {
@@ -177,7 +181,7 @@ void anda(int *x, int *y, char ch, char mapa[LIN][COL])
 }
 
 
-void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[], double duracao, int *flag_ninja, clock_t fim, clock_t comeco)
+void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[], TEMPO *tempo, int *flag_ninja)
 {
     int i, n;
     if(ch == 32)
@@ -202,9 +206,9 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJ
                     }
                     xb++;
                 }
-            fim = clock();
-            duracao = (double)(fim - comeco)/CLOCKS_PER_SEC;
-            if (duracao>=1 && *flag_ninja!=1)
+            tempo->fim = clock();
+            tempo->duracao = (double)(tempo->fim - tempo->comeco)/CLOCKS_PER_SEC;
+            if (tempo->duracao>=1 && *flag_ninja!=1)
             {
                 anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
                 *flag_ninja = 1;
@@ -212,7 +216,7 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJ
             if(kbhit())
             {
                 ch = getch();
-                anda(&*x, &*y, ch, mapa);
+                anda(x, y, ch, mapa);
             }
         }
 

@@ -11,13 +11,18 @@
 #define C 50
 #define QtdNinjas 5
 
-int main(void)
+typedef struct
 {
-     srand(time(NULL));
-    setlocale(LC_CTYPE, "");
     clock_t comeco, fim;
     double duracao;
+}TEMPO;
+
+int main()
+{
+    srand(time(NULL));
+    setlocale(LC_CTYPE, "");
     int option = 0;
+    TEMPO tempo;
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
     char ch = 0;
@@ -53,19 +58,19 @@ int main(void)
     {
         if (flag_ninja==1)
         {
-            comeco = clock();
+            tempo.comeco = clock();
             flag_ninja = 0;
         }
-        fim = clock();
-        duracao = (double)(fim - comeco)/CLOCKS_PER_SEC;
+        tempo.fim = clock();
+        tempo.duracao = (double)(tempo.fim - tempo.comeco)/CLOCKS_PER_SEC;
         if(kbhit())
             {
                 ch = getch();
                 anda(&x, &y, ch, mapa);
-                atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, duracao, &flag_ninja, fim, comeco);
+                atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja);
             }
 
-        if (duracao>=1 && flag_ninja!=1)
+        if (tempo.duracao>=1 && flag_ninja!=1)
         {
             anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
             flag_ninja = 1;
