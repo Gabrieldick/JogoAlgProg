@@ -15,12 +15,14 @@ int main(void)
 {
      srand(time(NULL));
     setlocale(LC_CTYPE, "");
+    clock_t comeco, fim;
+    double duracao;
     int option = 0;
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
     char ch = 0;
     int x = 2, y = 2;
-    int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas]={0};
+    int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas]={0}, flag_ninja=1;
 
     hidecursor();
     while (option != 1)
@@ -49,14 +51,25 @@ int main(void)
 
     while (ch != 27)
     {
-
+        if (flag_ninja==1)
+        {
+            comeco = clock();
+            flag_ninja = 0;
+        }
+        fim = clock();
+        duracao = (double)(fim - comeco)/CLOCKS_PER_SEC;
         if(kbhit())
             {
                 ch = getch();
                 anda(&x, &y, ch, mapa);
-                anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
-                atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto);
+                atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, duracao, &flag_ninja, fim, comeco);
             }
+
+        if (duracao>=1 && flag_ninja!=1)
+        {
+            anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
+            flag_ninja = 1;
+        }
     }
     system("pause");
 

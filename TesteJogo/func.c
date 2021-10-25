@@ -177,7 +177,7 @@ void anda(int *x, int *y, char ch, char mapa[LIN][COL])
 }
 
 
-void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[])
+void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[], double duracao, int *flag_ninja, clock_t fim, clock_t comeco)
 {
     int i, n;
     if(ch == 32)
@@ -202,6 +202,13 @@ void atira(int xb, int yb, int ch, char mapa[LIN][COL], int *x, int *y, int NINJ
                     }
                     xb++;
                 }
+            fim = clock();
+            duracao = (double)(fim - comeco)/CLOCKS_PER_SEC;
+            if (duracao>=1 && *flag_ninja!=1)
+            {
+                anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
+                *flag_ninja = 1;
+            }
             if(kbhit())
             {
                 ch = getch();
@@ -230,9 +237,10 @@ void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto
     {
         if (ninja_morto[n]!=1)
         {
-            mov_ninja = round(1 + ( (float)rand() / RAND_MAX) * (4 - 1));
+
             do
             {
+                mov_ninja = round(1 + ( (float)rand() / RAND_MAX) * (4 - 1));
                 switch(mov_ninja)
                 {
                     case 1://a
@@ -247,6 +255,7 @@ void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto
                             printf(" ");
                             valid_move = 1;
                         }
+                        else valid_move = 0;
                         break;
 
                     case 2://d
@@ -261,6 +270,7 @@ void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto
                             printf(" ");
                             valid_move = 1;
                         }
+                        else valid_move = 0;
                         break;
 
                     case 3://s
@@ -275,6 +285,7 @@ void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto
                             printf(" ");
                             valid_move = 1;
                         }
+                        else valid_move = 0;
                         break;
 
                     case 4://w
@@ -289,6 +300,7 @@ void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto
                             printf(" ");
                             valid_move = 1;
                         }
+                        else valid_move = 0;
                         break;
 
                     default:
