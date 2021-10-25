@@ -26,7 +26,7 @@ int main()
     TEMPO tempo;
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
-    char ch = 0;
+    char ch = 0, prox_ch='d';
     int x = 2, y = 2;
     int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas]={0}, flag_ninja=1;
 
@@ -67,8 +67,17 @@ int main()
         if(kbhit())
             {
                 ch = getch();
-                anda(&x, &y, ch, mapa);
-                atira(x, y, ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja);
+                switch (toupper(ch))
+                {
+                    case 32:
+                        atira(x, y, ch, prox_ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja);
+                        break;
+                    default:
+                        anda(&x, &y, ch, mapa);
+                        if(ch=='A' || ch=='D' || ch==77 || ch==75) prox_ch = ch;
+                        break;
+
+                }
             }
 
         if (tempo.duracao>=TIME_GAME && flag_ninja!=1)
