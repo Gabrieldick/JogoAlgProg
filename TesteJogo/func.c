@@ -6,6 +6,7 @@
 #include <conio2.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #define TIME_GAME 1
 #define LIN 23
 #define COL 61
@@ -177,12 +178,12 @@ void anda(int *x, int *y, char ch, char mapa[LIN][COL])
     }
 }
 
-void atira(int xb, int yb, int ch, int prox_ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[], TEMPO *tempo, int *flag_ninja, int *matou_todos)
+void atira(int xb, int yb, char ch, char prox_ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[], TEMPO *tempo, int *flag_ninja, int *matou_todos)
 {
-    int i, n;
+    int i, n, matou=0;
     switch (toupper(prox_ch))
     {
-        case 77: // ArrowLeft
+        case 77: // ArrowRight
         case 'D':
             for (i = 0; i <= 58; i++)
             {
@@ -201,7 +202,10 @@ void atira(int xb, int yb, int ch, int prox_ch, char mapa[LIN][COL], int *x, int
                         {
                             ninja_morto[n] = 1;
                             *matou_todos = *matou_todos + 1;
+                            matou = 1;
                         }
+                        if (matou == 1)
+                            i=58;
                     }
                     xb++;
                 }
@@ -240,17 +244,12 @@ void atira(int xb, int yb, int ch, int prox_ch, char mapa[LIN][COL], int *x, int
                         {
                             ninja_morto[n] = 1;
                             *matou_todos = *matou_todos + 1;
+                            matou = 1;
                         }
+                        if (matou == 1)
+                            i=58;
                     }
                     xb--;
-                }
-                tempo->fim = clock();
-                tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
-                if (tempo->duracao >= TIME_GAME)
-                {
-                    anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
-                    *flag_ninja = 1;
-                    tempo->comeco = clock();
                 }
                 if (kbhit())
                 {
@@ -373,4 +372,98 @@ void set_clock(TEMPO *tempo)
 {
     tempo->fim = clock();
     tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
+}
+
+void atira_ninja (char ch, char prox_ch, char mapa[LIN][COL], int *x, int *y, int NINJAx[], int NINJAy[], int ninja_morto[], TEMPO *tempo, int *flag_ninja, int *matou_todos, int *vidas)
+{
+    int difx, dify, i, j, dif, xb, yb, matou;
+    for(j=0; j<QtdNinjas; j++)
+    {
+            xb = NINJAx[j];
+            yb = NINJAy[j];
+            difx = NINJAx[j] - *x; //positivo significa que ninja está mais à direita
+            dify = NINJAy[j] - *y;
+            if (difx>0)
+                dif = 1;
+            else dif = 0;
+            if (dify==0 && ninja_morto[j]==0)
+            {
+                switch (dif)
+                {
+                    case 1: // atira pra esquerda
+                        for (i = 0; i <= 58; i++)
+                        {
+                            if (mapa[yb - 1][xb - 2] != '#')
+                            {
+                                gotoxy(xb - 1, yb);
+                                textbackground(BLACK);
+                                textcolor(LIGHTGRAY);
+                                printf("x");
+                                Sleep(25);
+                                gotoxy(xb - 1, yb);
+                                printf(" ");
+                                if (xb == *x && yb == *y)
+                                {
+                                    *vidas = *vidas - 1;
+                                    matou = 1;
+                                }
+                                xb--;
+                                if (matou == 1)
+                                    i=58;
+                            }
+                            tempo->fim = clock();
+                            tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
+                            if (tempo->duracao >= TIME_GAME)
+                            {
+                                anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
+                                *flag_ninja = 1;
+                                tempo->comeco = clock();
+                            }
+                            if (kbhit())
+                            {
+                                ch = getch();
+                                anda(x, y, ch, mapa);
+                            }
+                        }
+                        break;
+
+                    case 0: //atira pra direita
+                        for (i = 0; i <= 58; i++)
+                            {
+                                if (mapa[yb - 1][xb] != '#')
+                            {
+                                gotoxy(xb + 1, yb);
+                                textbackground(BLACK);
+                                textcolor(LIGHTGRAY);
+                                printf("x");
+                                Sleep(25);
+                                gotoxy(xb + 1, yb);
+                                printf(" ");
+                                if (xb == *x && yb == *y)
+                                {
+                                    *vidas--;
+                                }
+                                xb++;
+                            }
+                            tempo->fim = clock();
+                            tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
+                            if (tempo->duracao >= TIME_GAME)
+                            {
+                                anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
+                                *flag_ninja = 1;
+                                tempo->comeco = clock();
+                            }
+                            if (kbhit())
+                            {
+                                ch = getch();
+                                anda(x, y, ch, mapa);
+                            }
+                        }
+                        break;
+                }
+            }
+    }
+
+
+
 }

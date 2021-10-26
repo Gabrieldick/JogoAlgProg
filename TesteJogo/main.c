@@ -6,6 +6,7 @@
 #include <conio2.h>
 #include <string.h>
 #include <locale.h>
+#include <math.h>
 #define LIN 23
 #define COL 61
 #define C 50
@@ -27,7 +28,7 @@ int main()
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
     char ch = 0, prox_ch = 'd';
-    int x = 2, y = 2, shuriken = 5;
+    int x = 2, y = 2, shuriken = 5, n;
     int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas] = {0}, flag_ninja = 1, flag_ammo = 1, matou_todos = 0;
 
     hidecursor();
@@ -57,7 +58,7 @@ int main()
 
     tempo_game.comeco = clock();
 
-    while (ch != 27 && matou_todos != QtdNinjas)
+    while (ch != 27 && matou_todos != QtdNinjas && vidas>0)
     {
         set_clock(&tempo_game);
         textbackground(BLACK);
@@ -120,6 +121,11 @@ int main()
         if (tempo.duracao >= TIME_GAME && flag_ninja != 1)
         {
             anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto);
+            for (n=0; n<QtdNinjas; n++)
+            {
+                if (y == NINJAy[n])
+                    atira_ninja(ch, prox_ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja, &matou_todos, &vidas);
+            }
             flag_ninja = 1;
         }
     }
@@ -127,13 +133,20 @@ int main()
     Sleep(2500);
     clrscr();
     gotoxy(20, 6);
-    if (matou_todos == QtdNinjas)
+    if (vidas<=0)
+    {
+        textbackground(LIGHTBLUE);
+        textcolor(BLACK);
+        printf("GAME OVER!!! ):");
+    }
+    else if (matou_todos == QtdNinjas)
     {
         textbackground(LIGHTBLUE);
         textcolor(BLACK);
         printf("LEVEL COMPLETO!!!");
     }
     textbackground(BLACK);
+    printf("\t\t\t\t\t\t\t\\t\t");
     textcolor(WHITE);
     getch();
     return 0;
