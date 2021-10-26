@@ -359,3 +359,16 @@ void anda_ninjas(int NINJAx[], int NINJAy[],char mapa[LIN][COL], int ninja_morto
         }
     }
 }
+
+
+void recarrega_ammo(int *shuriken, TEMPO *t_ammo)
+{
+    t_ammo->comeco = clock();
+    t_ammo->duracao = 0;
+    if(t_ammo->duracao<1.75)
+    {
+        t_ammo->fim = clock();
+        t_ammo->duracao = (double)(t_ammo->fim - t_ammo->comeco)/CLOCKS_PER_SEC;
+    }
+    *shuriken=5;
+}
