@@ -27,8 +27,8 @@ int main()
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
     char ch = 0, prox_ch='d';
-    int x = 2, y = 2, shuriken=5;
-    int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas]={0}, flag_ninja=1, flag_ammo=1;
+    int x = 2, y = 2, shuriken=5, i;
+    int NINJAx[QtdNinjas], NINJAy[QtdNinjas], ninja_morto[QtdNinjas]={0}, flag_ninja=1, flag_ammo=1, matou_todos=0;
 
     hidecursor();
     while (option != 1)
@@ -57,7 +57,7 @@ int main()
 
     tempo_game.comeco = clock();
 
-    while (ch != 27)
+    while (ch != 27 && matou_todos!=QtdNinjas )
     {
         tempo_game.fim= clock();
         tempo_game.duracao = (double)(tempo_game.fim - tempo_game.comeco)/CLOCKS_PER_SEC;
@@ -68,9 +68,10 @@ int main()
         printf("Vidas restantes: %d\n", vidas);
         if(shuriken>0)
         {
-            printf("Shurikens restantes: %d                      ", shuriken);
+            printf("Shurikens restantes: %d                   \n", shuriken);
         }
         else printf("Shurikens restantes: recarregando...\n", shuriken);
+        printf("Inimigos abatidos: %d", matou_todos);
         textcolor(BLACK);
         if (flag_ninja==1)
         {
@@ -94,7 +95,7 @@ int main()
                     case 32:
                         if (shuriken>0)
                         {
-                            atira(x, y, ch, prox_ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja);
+                            atira(x, y, ch, prox_ch, mapa, &x, &y, NINJAx, NINJAy, ninja_morto, &tempo, &flag_ninja, &matou_todos);
                             shuriken--;
                             textbackground(BLACK);
                             textcolor(WHITE);
@@ -124,7 +125,15 @@ int main()
         }
 
     }
-    system("pause");
 
+    if (matou_todos==QtdNinjas)
+    {
+        clrscr();
+        gotoxy(20, 6);
+        textbackground(LIGHTBLUE);
+        textcolor(BLACK);
+        printf("LEVEL COMPLETO!!!");
+    }
+    getch();
     return 0;
 }
