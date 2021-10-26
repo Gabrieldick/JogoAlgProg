@@ -51,7 +51,7 @@ int main()
                 break;
 
             default:
-                printf("\nOpção invalida, digite novamente!\n\n");
+                printf("\nOpÃ§Ã£o invalida, digite novamente!\n\n");
         }
     }
 
@@ -119,7 +119,9 @@ int main()
         }
         if (tempo.duracao >= TIME_GAME && flag_ninja != 1)
         {
-            anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto, x, y, &flag_ninja, &tempo, &vidas);
+            anda_ninjas(NINJAx, NINJAy, mapa, ninja_morto, &x, &y, &flag_ninja, &tempo, &vidas);
+            printf("%d", vidas);
+
             flag_ninja = 1;
         }
     }
