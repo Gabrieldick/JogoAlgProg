@@ -22,7 +22,7 @@ int main()
 {
     srand(time(NULL));
     setlocale(LC_CTYPE, "");
-    int option = 0;
+    int vidas=3, option = 0;
     TEMPO tempo, t_ammo, tempo_game;
     char mapa[LIN][COL];
     char nome[C] = {"mapa1.txt"};
@@ -64,8 +64,13 @@ int main()
         textbackground(BLACK);
         textcolor(WHITE);
         gotoxy(1, 25);
-        printf("Shurikens restantes: %d\n", shuriken);
-        printf("Tempo decorrido: %4.2lf", tempo_game.duracao);
+        printf("Tempo decorrido: %4.2lf\t", tempo_game.duracao);
+        printf("Vidas restantes: %d\n", vidas);
+        if(shuriken>0)
+        {
+            printf("Shurikens restantes: %d                      ", shuriken);
+        }
+        else printf("Shurikens restantes: recarregando...\n", shuriken);
         textcolor(BLACK);
         if (flag_ninja==1)
         {
@@ -101,6 +106,7 @@ int main()
 
                     default:
                         anda(&x, &y, ch, mapa);
+                        ch = toupper(ch);
                         if(ch=='A' || ch=='D' || ch==77 || ch==75) prox_ch = ch;
                         break;
 
