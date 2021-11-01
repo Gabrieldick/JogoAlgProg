@@ -7,17 +7,13 @@
 #include <string.h>
 #include <locale.h>
 #include <math.h>
+#include "func.h"
 #define LIN 23
 #define COL 61
 #define C 50
 #define QtdNinjas 5
 #define TIME_GAME 1
 
-typedef struct
-{
-    clock_t comeco, fim;
-    double duracao;
-} TEMPO;
 
 int main()
 {

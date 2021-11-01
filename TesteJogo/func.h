@@ -1,7 +1,13 @@
 #ifndef FUNC_H_INCLUDED
 #define FUNC_H_INCLUDED
+#define LIN 23
+#define COL 61
 
-
+typedef struct
+{
+    clock_t comeco, fim;
+    double duracao;
+} TEMPO;
 void flush_in();
 void exibe_mapa(int *x, int *y, char mapa[LIN][COL], char nome[],  int NINJAx[], int NINJAy[]);
 void le_nome(char nome[]);

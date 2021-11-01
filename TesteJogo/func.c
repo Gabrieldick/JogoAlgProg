@@ -201,6 +201,8 @@ void atira(int xb, int yb, char ch, char prox_ch, char mapa[LIN][COL], int *x, i
                         if (xb == NINJAx[n] && yb == NINJAy[n])
                         {
                             ninja_morto[n] = 1;
+                            NINJAx[n] = 1;
+                            NINJAy[n] = 1;
                             *matou_todos = *matou_todos + 1;
                             matou = 1;
                         }
@@ -264,10 +266,10 @@ void atira(int xb, int yb, char ch, char prox_ch, char mapa[LIN][COL], int *x, i
 void hidecursor()
 {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO info;
-    info.dwSize = 100;
-    info.bVisible = FALSE;
-    SetConsoleCursorInfo(consoleHandle, &info);
+   CONSOLE_CURSOR_INFO info;
+   info.dwSize = 100;
+   info.bVisible = FALSE;
+   SetConsoleCursorInfo(consoleHandle, &info);
 }
 
 void anda_ninjas(int NINJAx[], int NINJAy[], char mapa[LIN][COL], int ninja_morto[])
@@ -443,6 +445,8 @@ void atira_ninja (char ch, char prox_ch, char mapa[LIN][COL], int *x, int *y, in
                                 {
                                     *vidas--;
                                 }
+                                if (matou == 1)
+                                    i=58;
                                 xb++;
                             }
                             tempo->fim = clock();
