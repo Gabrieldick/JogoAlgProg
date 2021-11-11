@@ -51,3 +51,30 @@
 	<math.h>
 	"func.h"
 
+1636591752 source:c:\users\user\desktop\ufrgs\algorÕtmos e programa«√o (e)\jogo certo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<conio2.h>
+	<time.h>
+	<windows.h>
+	<conio2.h>
+	<string.h>
+	<locale.h>
+	<math.h>
+	<ctype.h>
+	"func.h"
+
+1636591288 c:\users\user\desktop\ufrgs\algorÕtmos e programa«√o (e)\jogo certo\func.h
+
+1636591704 source:c:\users\user\desktop\ufrgs\algorÕtmos e programa«√o (e)\jogo certo\func.c
+	<stdio.h>
+	<stdlib.h>
+	<conio2.h>
+	<time.h>
+	<windows.h>
+	<conio2.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"func.h"
+
