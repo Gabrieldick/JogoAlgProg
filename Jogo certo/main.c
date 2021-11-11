@@ -164,6 +164,20 @@ int main()
             textcolor(WHITE);
             gotoxy(65, 1);
             printf("Nível atual: %d\t", level);
+            if(covarde)
+            {
+                  gotoxy(65, 2);
+                  textbackground(RED);
+                  textcolor(BLACK);
+                  printf("COVARDE!!!");
+            }
+
+            else
+            {
+                  gotoxy(65, 2);
+                  textbackground(BLACK);
+                  printf("              ");
+            }
             gotoxy(1, 25);
             printf("Tempo decorrido: %4.2lf\t", tempo_game.duracao);
             printf("Vidas restantes: %d \n", naruto.vidas);
