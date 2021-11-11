@@ -558,3 +558,81 @@ int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
 
     return movimento;
 }
+
+void cheat(char ch, int *estado, int *covarde)
+{
+      switch (ch)
+      {
+            case 99: //c
+            case 67: //C
+                  *estado = 1;
+                  break;
+
+            case 111: //o
+            case 79: //O
+                  if(*estado ==1)
+                        *estado = 2;
+
+                  else
+                        *estado = 0;
+
+                  break;
+
+            case 118: //v
+            case 86: //V
+                  if(*estado == 2)
+                        *estado = 3;
+
+                  else
+                        *estado = 0;
+
+                  break;
+
+            case 97: //a
+            case 65: //A
+                  if(*estado == 3)
+                        *estado = 4;
+
+                  else
+                        *estado = 0;
+
+                  break;
+
+            case 114: //r
+            case 82: //R
+                  if(*estado == 4)
+                        *estado = 5;
+
+                  else
+                        *estado = 0;
+
+                  break;
+
+            case 100: //d
+            case 68: //D
+                  if(*estado == 5)
+                        *estado = 6;
+
+                  else
+                        *estado = 0;
+                  break;
+
+            case 101: //e
+            case 69: //E
+                  if(*estado == 6)
+                        if(*covarde)
+                              *covarde = 0;
+
+                        else
+                              *covarde = 1;
+
+                  else
+                        *estado = 0;
+
+                  break;
+
+            default:
+                  *estado = 0;
+                  break;
+                }
+}

@@ -15,12 +15,12 @@ int main()
 {
     srand(time(NULL));
     setlocale(LC_CTYPE, "");
-    int vidas = 3, covarde = 1;
+    int vidas = 3, covarde = 0, estado=0;
     TEMPO tempo, t_ammo, tempo_game, tiro_naruto;
     char mapa[LIN][COL], option;
     char nome[C];
     char ch = 0, prox_ch = 'd';
-    char ch_tiro = 0;
+    char ch_tiro =0;
     int  n, i, l, c;
     int ninja_morto[QtdNinjasMAX] = {0}, flag_ninja = 1, flag_ammo = 1, matou_todos = 0, flag_tiro=1, atualiza_xys=1;
     FILE *arq;
@@ -42,11 +42,11 @@ int main()
 
     for (qtd_level = 1; qtd_level<lvlMAX; qtd_level++)
     {
-        sprintf(nome, "mapa%d", qtd_level);
-        strcat(nome, ".txt");
-        arq = fopen(nome, "r");
-        if(arq == NULL)
-            break;
+            sprintf(nome, "mapa%d", qtd_level);
+            strcat(nome, ".txt");
+            arq = fopen(nome, "r");
+            if(arq == NULL)
+                  break;
     }
 
     do
@@ -201,9 +201,13 @@ int main()
             set_clock(&tempo);
             set_clock(&t_ammo);
             set_clock(&tiro_naruto);
+
             if (kbhit())
             {
                 ch = getch();
+
+                cheat(ch, &estado, &covarde);
+
                 switch (ch)
                 {
                     case 32: // espaço
@@ -222,11 +226,6 @@ int main()
                         }
                         break;
 
-                    case 111: // o
-                        qtd_chaves = 0;
-                        break;
-
-
                     default:
                         anda(&naruto, ch, mapa, &pos_arm, &chaves, &qtd_chaves, covarde);
                         ch = toupper(ch);
@@ -234,6 +233,7 @@ int main()
                             prox_ch = ch;
                         break;
                 }
+
             }
             atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &matou_todos, &i, &atualiza_xys, QtdNinjas, &naruto);
 
@@ -282,10 +282,9 @@ int main()
         {
             textbackground(LIGHTBLUE);
             textcolor(BLACK);
-            printf("LEVEL COMPLETO!!!");
+            printf("LEVEL COMPLETO!!!\n\n");
         }
         textbackground(BLACK);
-        printf("\t\t\t\t\t\t\t\\t\t");
         textcolor(WHITE);
     }
     system("pause");

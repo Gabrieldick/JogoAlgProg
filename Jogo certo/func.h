@@ -35,5 +35,6 @@ void recarrega_ammo(PERSONAGEM *naruto, TEMPO *t_ammo);
 void set_clock(TEMPO *tempo);
 void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], TEMPO *tempo, int *flag_ninja, int *matou_todos, VETOR *pos_arm, int *chaves, int QtdNinjas, int tiro_ninja[], int atuliza_sn[]);
 int mov_inteligentey(VETOR NINJA[], PERSONAGEM naruto, int n);
+void cheat(char ch, int *estado, int *covarde);
 
 #endif // FUNC_H_INCLUDED
