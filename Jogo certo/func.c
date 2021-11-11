@@ -226,6 +226,7 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
         {
             naruto->shurikens++;
         }
+        mapa[naruto->y - 1][naruto->x - 1] = 'J';
     }
 }
 
@@ -348,7 +349,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
         {
             do
             {
-                if (sqrt(pow((NINJA[n].x - naruto.x), 2)+pow((NINJA[n].y - naruto.y), 2))<25 && valid_move == 1)
+                if (sqrt(pow((NINJA[n].x - naruto.x), 2)+pow((NINJA[n].y - naruto.y), 2))<500 && valid_move == 1)
                     mov_ninja = mov_inteligente(NINJA, naruto, n);
                 else
                 {

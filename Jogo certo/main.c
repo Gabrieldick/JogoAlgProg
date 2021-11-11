@@ -162,6 +162,8 @@ int main()
             set_clock(&tempo_game);
             textbackground(BLACK);
             textcolor(WHITE);
+            gotoxy(65, 1);
+            printf("Nível atual: %d\t", level);
             gotoxy(1, 25);
             printf("Tempo decorrido: %4.2lf\t", tempo_game.duracao);
             printf("Vidas restantes: %d \n", naruto.vidas);
@@ -204,8 +206,8 @@ int main()
                 ch = getch();
                 switch (ch)
                 {
-                    case 32:
-                    case 107:
+                    case 32: // espaço
+                    case 107: //k
                         if (naruto.shurikens > 0)
                         {
                             if(atualiza_xys == 1)
@@ -217,10 +219,13 @@ int main()
                             flag_tiro = 1;
 
                             atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &matou_todos, &i, &atualiza_xys, QtdNinjas, &naruto);
-
-
                         }
                         break;
+
+                    case 111: // o
+                        qtd_chaves = 0;
+                        break;
+
 
                     default:
                         anda(&naruto, ch, mapa, &pos_arm, &chaves, &qtd_chaves, covarde);
