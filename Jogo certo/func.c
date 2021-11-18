@@ -251,25 +251,38 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
     {
         case 77: // ArrowRight
         case 'D':
-            if (*flag_tiro == 1)
+            if (*flag_tiro == 1 )
             {
                 if (mapa[pos_shuriken->y - 1][pos_shuriken->x] != '#')
                 {
+                    textbackground(BLACK);
+                    if(pos_shuriken->x > naruto->x)
+                    {
+                        gotoxy(pos_shuriken->x, pos_shuriken->y);
+                        printf(" ");
+                    }
 
                     gotoxy(pos_shuriken->x + 1, pos_shuriken->y);
-                    textbackground(BLACK);
+
                     textcolor(YELLOW);
                     printf("x");
-                    Sleep(10);
-                    gotoxy(pos_shuriken->x + 1, pos_shuriken->y);
-                    printf(" ");
+
+
 
                     for (n = 0; n < QtdNinjas; n++)
                     {
                         if (pos_shuriken->x == NINJA[n].x && pos_shuriken->y == NINJA[n].y)
                         {
-                            gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
+
+                            gotoxy(pos_shuriken->x + 1, pos_shuriken->y);
+                            printf(" ");
+
+                            gotoxy(NINJA[n].Xs, NINJA[n].Ys);
+                            printf(" ");
+
+                            gotoxy(NINJA[n].x, NINJA[n].y);
+
                             printf(" ");
                             ninja_morto[n] = 1;
                             NINJA[n].x = 1;
@@ -291,12 +304,16 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                 }
                 else
                 {
+                    textbackground(BLACK);
+                    gotoxy(pos_shuriken->x, pos_shuriken->y);
+                    printf(" ");
                     *flag_tiro = 0;
                     *atualiza_xys = 1;
                 }
             }
             else
             {
+
                 *atualiza_xys = 1;
             }
             break;
@@ -307,21 +324,37 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
             {
                 if (mapa[pos_shuriken->y - 1][pos_shuriken->x - 2] != '#')
                 {
-                    gotoxy(pos_shuriken->x - 1, pos_shuriken->y);
+
                     textbackground(BLACK);
+                    if(pos_shuriken->x < naruto->x || (naruto->x == 2 && naruto->y == 2))
+                    {
+                        gotoxy(pos_shuriken->x, pos_shuriken->y);
+                        printf(" ");
+                    }
+
+                    gotoxy(pos_shuriken->x - 1, pos_shuriken->y);
+
                     textcolor(YELLOW);
                     printf("x");
-                    Sleep(10);
-                    gotoxy(pos_shuriken->x - 1, pos_shuriken->y);
-                    printf(" ");
+
+
                     for (n = 0; n < QtdNinjas; n++)
                     {
                         if (pos_shuriken->x == NINJA[n].x && pos_shuriken->y == NINJA[n].y)
                         {
-                            gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
+
+                            gotoxy(pos_shuriken->x - 1, pos_shuriken->y);
+                            printf(" ");
+
+                            gotoxy(NINJA[n].x, NINJA[n].y);
+
                             printf(" ");
                             ninja_morto[n] = 1;
+
+                            gotoxy(NINJA[n].Xs, NINJA[n].Ys);
+                            printf(" ");
+
                             NINJA[n].x = 1;
                             NINJA[n].y = 1;
                             mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
@@ -339,6 +372,9 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                 }
                 else
                 {
+                    textbackground(BLACK);
+                    gotoxy(pos_shuriken->x, pos_shuriken->y);
+                    printf(" ");
                     *flag_tiro = 0;
                     *atualiza_xys = 1;
                 }
@@ -492,17 +528,25 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                     case 1: // atira pra esquerda
                             if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs - 2] != '#')
                             {
-                                gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
                                 textbackground(BLACK);
+
+                                gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                                printf(" ");
+
+
+                                gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
+
                                 textcolor(LIGHTGRAY);
                                 printf("x");
-                                Sleep(5);
-                                gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
-                                printf(" ");
+
                                 if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
                                 {
-                                    gotoxy(naruto->x, naruto->y);
                                     textbackground(BLACK);
+                                    gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
+                                    printf(" ");
+
+                                    gotoxy(naruto->x, naruto->y);
+
                                     printf(" ");
                                     naruto->vidas = naruto->vidas - 1;
                                     matou = 1;
@@ -521,6 +565,10 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                             }
                             else
                             {
+                                textbackground(BLACK);
+                                gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                                printf(" ");
+
                                 tiro_ninja[i] = 0;
                                 atualiza_sn[i] = 1;
                             }
@@ -529,17 +577,25 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                     case 0: //atira pra direita
                                 if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs] != '#')
                                 {
-                                    gotoxy(NINJA[i].Xs + 1, NINJA[i].Ys);
                                     textbackground(BLACK);
+
+                                        gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                                        printf(" ");
+
+
+                                    gotoxy(NINJA[i].Xs +1, NINJA[i].Ys);
+
                                     textcolor(LIGHTGRAY);
                                     printf("x");
-                                    Sleep(5);
-                                    gotoxy(NINJA[i].Xs + 1, NINJA[i].Ys);
-                                    printf(" ");
+
                                     if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
                                     {
-                                        gotoxy(naruto->x, naruto->y);
                                         textbackground(BLACK);
+                                        gotoxy(NINJA[i].Xs + 1, NINJA[i].Ys);
+                                        printf(" ");
+
+                                        gotoxy(naruto->x, naruto->y);
+
                                         printf(" ");
                                         naruto->vidas = naruto->vidas - 1;
                                         matou = 1;
@@ -558,6 +614,9 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                                 }
                                 else
                                 {
+                                    textbackground(BLACK);
+                                    gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                                    printf(" ");
                                     tiro_ninja[i] = 0;
                                     atualiza_sn[i] = 1;
                                 }
@@ -569,6 +628,7 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
 
 
 }
+
 
 int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
 {

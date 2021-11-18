@@ -143,12 +143,6 @@ int main()
                         textbackground(WHITE);
                         printf(" ");
                     }
-                    else if(covarde)
-                    {
-                        gotoxy(naruto.x, naruto.y);
-                        textbackground(YELLOW);
-                        printf(" ");
-                    }
                 }
             }
             for (n = 0; n<QtdNinjas; n++)

@@ -78,3 +78,30 @@
 	<math.h>
 	"func.h"
 
+1637207790 source:c:\users\artur\desktop\nova pasta (2)\jogoalgprog-main\jogo certo\main.c
+	<stdio.h>
+	<stdlib.h>
+	<conio2.h>
+	<time.h>
+	<windows.h>
+	<conio2.h>
+	<string.h>
+	<locale.h>
+	<math.h>
+	<ctype.h>
+	"func.h"
+
+1637205922 c:\users\artur\desktop\nova pasta (2)\jogoalgprog-main\jogo certo\func.h
+
+1637207693 source:c:\users\artur\desktop\nova pasta (2)\jogoalgprog-main\jogo certo\func.c
+	<stdio.h>
+	<stdlib.h>
+	<conio2.h>
+	<time.h>
+	<windows.h>
+	<conio2.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"func.h"
+
