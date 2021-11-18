@@ -8,6 +8,7 @@
 #define INICIO 1
 #define FIM 4
 #define lvlMAX 99
+#define Vidas_inicio 3
 
 typedef struct
 {
@@ -34,7 +35,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
 void recarrega_ammo(PERSONAGEM *naruto, TEMPO *t_ammo);
 void set_clock(TEMPO *tempo);
 void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], int QtdNinjas, int tiro_ninja[], int atualiza_sn[]);
-int mov_inteligentey(VETOR NINJA[], PERSONAGEM naruto, int n);
+int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n);
 void cheat(char ch, int *estado, int *covarde);
 
 #endif // FUNC_H_INCLUDED

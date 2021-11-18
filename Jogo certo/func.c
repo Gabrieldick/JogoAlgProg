@@ -39,8 +39,9 @@ int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
                 fscanf(arq, "%c", &mapa[i][j]);
             }
         }
+        fclose(arq);
     }
-    fclose(arq);
+
 
     return erro;
 }
@@ -122,9 +123,11 @@ char menu()
 {
     char option;
 
-    printf("Selecione uma das opções: \n");
-    printf("S - Selecionar nível: \n");
-    printf("N - Novo jogo: \n");
+    printf("N - Novo jogo: \t");
+    printf("C - Carregar jogo: \t");
+    printf("S - Salvar jogo: \t");
+    printf("Q - Sair do jogo: \t");
+    printf("V - Voltar");
 
     option = getch();
 
@@ -210,7 +213,7 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
             break;
     }
 
-    if(andou = 1)
+    if(andou == 1)
     {
         if ((mapa[naruto->y - 1][naruto->x - 1] == 'X') && covarde == 0)
         {

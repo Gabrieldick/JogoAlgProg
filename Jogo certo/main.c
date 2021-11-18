@@ -15,14 +15,14 @@ int main()
 {
     srand(time(NULL));
     setlocale(LC_CTYPE, "");
-    int vidas = 3, covarde = 0, estado=0;
+    int covarde = 0, estado=0;
     TEMPO tempo, t_ammo, tempo_game, tiro_naruto;
-    char mapa[LIN][COL], option;
+    char mapa[LIN][COL], option, opt_menu;
     char nome[C];
     char ch = 0, prox_ch = 'd';
     char ch_tiro =0;
     int  n, i, l, c;
-    int ninja_morto[QtdNinjasMAX] = {0}, flag_ninja = 1, flag_ammo = 1, matou_todos = 0, flag_tiro=1, atualiza_xys=1;
+    int ninja_morto[QtdNinjasMAX] = {0}, flag_ninja = 1, matou_todos = 0, flag_tiro=1, atualiza_xys=1;
     FILE *arq;
     int chaves = 0, erro = 0, qtd_chaves = 0;
     int  QtdNinjas = 0, level = 1, qtd_level;
@@ -35,8 +35,8 @@ int main()
     pos_arm.x = 1;
     pos_arm.y = 1;
     naruto.pontos = 0;
-    naruto.shurikens = 5;
-    naruto.vidas = 5;
+    naruto.shurikens = 7;
+    naruto.vidas = Vidas_inicio;
 
     hidecursor();
 
@@ -56,18 +56,18 @@ int main()
         switch (toupper(option))
         {
             case 'S':
-                le_nome(arq, nome);
-                erro = copia_mapa(mapa, arq, nome);
-                printf("\n");
-                if (erro == 0)
-                {
-                    Sleep(1000);
-                    clrscr();
-                    textcolor(BLACK);
-                    exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves);
+                printf("Inicie um jogo para salvar!\n");
+                break;
 
-                    printf("\n");
-                }
+            case'Q':
+                //sai do jogo
+                break;
+
+            case'C':
+                //Carrega jogo
+                break;
+
+            case'V':
                 break;
 
             case 'N':
@@ -83,27 +83,25 @@ int main()
     }while ((option != 'N' && option != 'n') || erro ==1);
 
 
-    tempo_game.comeco = clock();
+    tempo_game.comeco = clock(); //Começa a contar o tempo de jogo
 
     for(level = 1; level<qtd_level && naruto.vidas>0; level++)
     {
-        //reseta_contadores(&qtd_chaves, &ninja_morto, &QtdNinjas);
         qtd_chaves = 0;
         QtdNinjas = 0;
-        if (option == 'N' || option == 'n')
+
+        // carrega o próximo mapa
+        sprintf(nome, "mapa%d", level);
+        strcat(nome, ".txt");
+        erro = copia_mapa(mapa, arq, nome);
+        printf("\n");
+        if (erro == 0)
         {
-            sprintf(nome, "mapa%d", level);
-            strcat(nome, ".txt");
-            erro = copia_mapa(mapa, arq, nome);
+            Sleep(1000);
+            clrscr();
+            textcolor(BLACK);
+            exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves);
             printf("\n");
-            if (erro == 0)
-            {
-                Sleep(1000);
-                clrscr();
-                textcolor(BLACK);
-                exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves);
-                printf("\n");
-            }
         }
 
          for(i = 0; i < QtdNinjas; i++)
@@ -115,8 +113,7 @@ int main()
 
         }
 
-
-
+        //loop em que o jogo funciona
         while (ch != 27 && qtd_chaves>0 && naruto.vidas > 0)
         {
             for (l = 0; l < LIN; l++)
@@ -197,6 +194,9 @@ int main()
                 printf("Shurikens restantes: Sem shurikens restantes\n");
 
             printf("Inimigos abatidos: %d", matou_todos);
+            printf("\n");
+
+
             textcolor(BLACK);
             if (flag_ninja == 1)
             {
@@ -245,6 +245,65 @@ int main()
 
                             atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &matou_todos, &i, &atualiza_xys, QtdNinjas, &naruto);
                         }
+                        break;
+
+                    case 9: //tab
+                        do
+                        {
+                            gotoxy(1, 31);
+                            textcolor(WHITE);
+                            opt_menu = menu();
+                            switch (toupper(option))
+                            {
+                                case 'S':
+                                    //salva o jogo
+                                    break;
+
+                                case'Q':
+                                    exit(0);
+                                    break;
+
+                                case'C':
+                                    //Carrega jogo
+                                    break;
+
+                                case'V':
+
+                                    break;
+
+                                case 'N': //reseta o jogo
+                                    qtd_chaves = 0;
+                                    QtdNinjas = 0;
+                                    naruto.pontos = 0;
+                                    naruto.shurikens = 7;
+                                    level = 1;
+                                    naruto.vidas = Vidas_inicio;
+                                    sprintf(nome, "mapa%d", level);
+                                    strcat(nome, ".txt");
+                                    erro = copia_mapa(mapa, arq, nome);
+                                    printf("\n");
+                                    if (erro == 0)
+                                    {
+                                        Sleep(1000);
+                                        clrscr();
+                                        textcolor(BLACK);
+                                        exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves);
+                                        printf("\n");
+                                    }
+                                     for(i = 0; i < QtdNinjas; i++)
+                                    {
+                                        ninja_morto[i] = 0;
+                                        tiro_ninja[i] = 0;
+                                        dir_ninja[i] = 0;
+                                        atualiza_sn[i] = 1;
+                                    }
+                                    tempo_game.comeco = clock(); //recomeça a contar o tempo de jogo
+                                    break;
+
+                                default:
+                                    opt_menu = 'e';
+                            }
+                        }while(opt_menu == 'e');
                         break;
 
                     default:
