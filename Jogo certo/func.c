@@ -254,6 +254,9 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                     {
                         if (pos_shuriken->x == NINJA[n].x && pos_shuriken->y == NINJA[n].y)
                         {
+                            gotoxy(NINJA[n].x, NINJA[n].y);
+                            textbackground(BLACK);
+                            printf(" ");
                             ninja_morto[n] = 1;
                             NINJA[n].x = 1;
                             NINJA[n].y = 1;
@@ -301,6 +304,9 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                     {
                         if (pos_shuriken->x == NINJA[n].x && pos_shuriken->y == NINJA[n].y)
                         {
+                            gotoxy(NINJA[n].x, NINJA[n].y);
+                            textbackground(BLACK);
+                            printf(" ");
                             ninja_morto[n] = 1;
                             NINJA[n].x = 1;
                             NINJA[n].y = 1;
@@ -361,7 +367,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                 switch (mov_ninja)
                 {
                     case 1: // a
-                        if (mapa[NINJA[n].y - 1][NINJA[n].x - 2] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'X' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'J' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'Z' )
+                        if (mapa[NINJA[n].y - 1][NINJA[n].x - 2] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'J' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'Z' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'C' )
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -379,7 +385,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                         break;
 
                     case 2: // d
-                        if (mapa[NINJA[n].y - 1][NINJA[n].x] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'X' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'J')
+                        if (mapa[NINJA[n].y - 1][NINJA[n].x] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'J' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'C' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'Z')
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -397,7 +403,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                         break;
 
                     case 3: // s
-                        if (mapa[NINJA[n].y][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'X' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'J')
+                        if (mapa[NINJA[n].y][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'J' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'Z' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'C')
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -415,7 +421,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                         break;
 
                     case 4: // w
-                        if (mapa[NINJA[n].y - 2][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'X' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'J')
+                        if (mapa[NINJA[n].y - 2][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'J' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'C' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'Z')
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -459,9 +465,9 @@ void set_clock(TEMPO *tempo)
     tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
 }
 
-void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], TEMPO *tempo, int *flag_ninja, int *matou_todos, VETOR *pos_arm, int *chaves, int QtdNinjas, int tiro_ninja[], int atualiza_sn[])
+void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], int QtdNinjas, int tiro_ninja[], int atualiza_sn[])
 {
-    int difx, dify, i, j, dif, xb, yb, matou;
+    int i, matou = 0;
     for(i = 0; i < QtdNinjas; i++)
     {
 
@@ -481,6 +487,9 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                                 printf(" ");
                                 if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
                                 {
+                                    gotoxy(naruto->x, naruto->y);
+                                    textbackground(BLACK);
+                                    printf(" ");
                                     naruto->vidas = naruto->vidas - 1;
                                     matou = 1;
                                     naruto->x = 2;
@@ -515,6 +524,9 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                                     printf(" ");
                                     if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
                                     {
+                                        gotoxy(naruto->x, naruto->y);
+                                        textbackground(BLACK);
+                                        printf(" ");
                                         naruto->vidas = naruto->vidas - 1;
                                         matou = 1;
                                         naruto->x = 2;

@@ -85,7 +85,7 @@ int main()
 
     tempo_game.comeco = clock();
 
-    for(level = 1; level<qtd_level; level++)
+    for(level = 1; level<qtd_level && naruto.vidas>0; level++)
     {
         //reseta_contadores(&qtd_chaves, &ninja_morto, &QtdNinjas);
         qtd_chaves = 0;
@@ -145,6 +145,12 @@ int main()
                     {
                         gotoxy(c+1, l+1);
                         textbackground(WHITE);
+                        printf(" ");
+                    }
+                    else if(covarde)
+                    {
+                        gotoxy(naruto.x, naruto.y);
+                        textbackground(YELLOW);
                         printf(" ");
                     }
                 }
@@ -219,7 +225,8 @@ int main()
             if (kbhit())
             {
                 ch = getch();
-
+                if(ch == 'l') //TIRAR!!!!!!!
+                    qtd_chaves = 0;
                 cheat(ch, &estado, &covarde);
 
                 switch (ch)
@@ -275,7 +282,7 @@ int main()
 
                 flag_ninja = 1;
             }
-            atira_ninja(covarde, dir_ninja, mapa, &naruto, NINJA, ninja_morto, &tempo, &flag_ninja, &matou_todos, &pos_arm, &chaves, QtdNinjas, tiro_ninja, atualiza_sn);
+            atira_ninja(covarde, dir_ninja, mapa, &naruto, NINJA, ninja_morto, QtdNinjas, tiro_ninja, atualiza_sn);
 
 
         }
@@ -286,7 +293,7 @@ int main()
         Sleep(2500);
         clrscr();
         gotoxy(20, 6);
-        if (vidas<=0)
+        if (naruto.vidas==0)
         {
             textbackground(LIGHTBLUE);
             textcolor(BLACK);
@@ -301,6 +308,14 @@ int main()
         textbackground(BLACK);
         textcolor(WHITE);
     }
+    if (level == qtd_level)
+        {
+            clrscr();
+            gotoxy(20, 6);
+            textbackground(LIGHTBLUE);
+            textcolor(BLACK);
+            printf("JOGO COMPLETO!!!\n\n");
+        }
     system("pause");
     return 0;
 }
