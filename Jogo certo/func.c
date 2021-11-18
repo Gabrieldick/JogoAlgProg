@@ -46,7 +46,7 @@ int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
     return erro;
 }
 
-void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves)
+void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves, int ninja_morto[], int *carregando)
 {
     int i, j, n = 0;
 
@@ -68,7 +68,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 textbackground(YELLOW);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'N')
+            else if (mapa[i][j] == 'N' && *carregando == 0)
             {
                 NINJA[n].x = wherex();
                 NINJA[n].y = wherey();
@@ -76,6 +76,15 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 textbackground(DARKGRAY);
                 printf(" ");
                 *QtdNinjas = *QtdNinjas + 1;
+            }
+            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && *carregando == 1)
+            {
+                n++;
+                if(ninja_morto[n] == 0)
+                {
+                    textbackground(DARKGRAY);
+                    printf(" ");
+                }
             }
              else if (mapa[i][j] == 'Z')
             {

@@ -27,7 +27,7 @@ typedef struct
 }VETOR;
 void flush_in();
 int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[]);
-void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves);
+void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves, int ninja_morto[], int *carregando);
 void le_nome(FILE *arq, char nome[]);
 void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int *chaves, int *qtd_chaves, int covarde);
 void atira(VETOR *pos_shuriken, int *ch, char prox_ch, char mapa[LIN][COL], VETOR NINJA[], int ninja_morto[], int *matou_todos, int *i, int *atualiza_xys, int QtdNinjas, PERSONAGEM *naruto);

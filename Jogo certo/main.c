@@ -15,7 +15,7 @@ int main()
 {
     srand(time(NULL));
     setlocale(LC_CTYPE, "");
-    int covarde = 0, estado=0;
+    int covarde = 0, estado=0, carregando = 0;
     TEMPO tempo, t_ammo, tempo_game, tiro_naruto;
     char mapa[LIN][COL], option, opt_menu;
     char nome[C];
@@ -99,7 +99,7 @@ int main()
             Sleep(1000);
             clrscr();
             textcolor(BLACK);
-            exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves);
+            exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, &carregando);
             printf("\n");
         }
 
@@ -284,7 +284,8 @@ int main()
                                         Sleep(1000);
                                         clrscr();
                                         textcolor(BLACK);
-                                        exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves);
+                                        carregando = 0;
+                                        exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, &carregando);
                                         printf("\n");
                                     }
                                      for(i = 0; i < QtdNinjas; i++)
