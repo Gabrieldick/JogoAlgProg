@@ -2,9 +2,14 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="func.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="10" zoom_2="0">
+	<File name="func.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="11" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9885" topLine="14" />
+			<Cursor1 position="497" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="func.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="10" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13857" topLine="189" />
 		</Cursor>
 		<Folding>
 			<Collapse line="14" />
@@ -12,25 +17,14 @@
 			<Collapse line="49" />
 			<Collapse line="108" />
 			<Collapse line="122" />
-			<Collapse line="137" />
-			<Collapse line="236" />
-			<Collapse line="343" />
-			<Collapse line="352" />
-			<Collapse line="453" />
-			<Collapse line="465" />
-			<Collapse line="471" />
-			<Collapse line="562" />
-			<Collapse line="577" />
+			<Collapse line="139" />
+			<Collapse line="238" />
+			<Collapse line="345" />
 		</Folding>
 	</File>
-	<File name="func.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="11" zoom_2="0">
+	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="11" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="216" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="main.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="11" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="305" topLine="249" />
+			<Cursor1 position="6737" topLine="197" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

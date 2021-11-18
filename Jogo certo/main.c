@@ -56,18 +56,15 @@ int main()
         switch (toupper(option))
         {
             case 'S':
-                printf("Inicie um jogo para salvar!\n");
+                printf("\n\nInicie um jogo para salvar!\n\n");
                 break;
 
             case'Q':
-                //sai do jogo
+                exit(0);
                 break;
 
             case'C':
                 //Carrega jogo
-                break;
-
-            case'V':
                 break;
 
             case 'N':
@@ -77,7 +74,7 @@ int main()
                 break;
 
             default:
-                printf("\nOpção invalida, digite novamente!\n\n");
+                printf("\n\nOpção invalida, digite novamente!\n\n");
         }
 
     }while ((option != 'N' && option != 'n') || erro ==1);
@@ -93,7 +90,9 @@ int main()
         // carrega o próximo mapa
         sprintf(nome, "mapa%d", level);
         strcat(nome, ".txt");
+        arq = fopen(nome, "r");
         erro = copia_mapa(mapa, arq, nome);
+        fclose(arq);
         printf("\n");
         if (erro == 0)
         {
@@ -186,13 +185,7 @@ int main()
             printf("Vidas restantes: %d \n", naruto.vidas);
             printf("Pontos: %d \n", naruto.pontos);
             printf("Chaves obtidas: %d  \n", chaves);
-            if (naruto.shurikens > 0)
-            {
-                printf("Shurikens restantes: %d                                                        \n", naruto.shurikens);
-            }
-            else
-                printf("Shurikens restantes: Sem shurikens restantes\n");
-
+            printf("Shurikens restantes: %d\n", naruto.shurikens);
             printf("Inimigos abatidos: %d", matou_todos);
             printf("\n");
 
@@ -237,7 +230,8 @@ int main()
                         {
                             if(atualiza_xys == 1)
                             {
-                                naruto.shurikens--;
+                                if(!covarde)
+                                    naruto.shurikens--;
                                 ch_tiro = prox_ch;
                             }
                             atualiza_xys = 0;
@@ -250,25 +244,25 @@ int main()
                     case 9: //tab
                         do
                         {
-                            gotoxy(1, 31);
+                            gotoxy(1, 300);
+                            textbackground(BLACK);
                             textcolor(WHITE);
                             opt_menu = menu();
-                            switch (toupper(option))
+                            switch (toupper(opt_menu))
                             {
                                 case 'S':
                                     //salva o jogo
                                     break;
 
-                                case'Q':
+                                case 'Q':
                                     exit(0);
                                     break;
 
-                                case'C':
+                                case 'C':
                                     //Carrega jogo
                                     break;
 
-                                case'V':
-
+                                case 'V':
                                     break;
 
                                 case 'N': //reseta o jogo
@@ -277,10 +271,13 @@ int main()
                                     naruto.pontos = 0;
                                     naruto.shurikens = 7;
                                     level = 1;
+                                    covarde = 0;
                                     naruto.vidas = Vidas_inicio;
                                     sprintf(nome, "mapa%d", level);
                                     strcat(nome, ".txt");
+                                    arq = fopen(nome, "r");
                                     erro = copia_mapa(mapa, arq, nome);
+                                    fclose(arq);
                                     printf("\n");
                                     if (erro == 0)
                                     {

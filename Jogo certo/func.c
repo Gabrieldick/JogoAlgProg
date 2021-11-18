@@ -23,7 +23,7 @@ int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
 {
     int i, j, erro;
 
-    arq = fopen(nome, "r");
+
     if (arq == NULL)
     {
         printf("\nNível ainda não produzido!");
@@ -39,7 +39,7 @@ int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
                 fscanf(arq, "%c", &mapa[i][j]);
             }
         }
-        fclose(arq);
+
     }
 
 
@@ -123,11 +123,13 @@ char menu()
 {
     char option;
 
-    printf("N - Novo jogo: \t");
-    printf("C - Carregar jogo: \t");
-    printf("S - Salvar jogo: \t");
-    printf("Q - Sair do jogo: \t");
-    printf("V - Voltar");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("\t\t\t\t\t\tN - Novo jogo \n");
+    printf("\t\t\t\t\t\tC - Carregar jogo \n");
+    printf("\t\t\t\t\t\tS - Salvar jogo \n");
+    printf("\t\t\t\t\t\tQ - Sair do jogo \n");
+    printf("\t\t\t\t\t\tV - Voltar");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     option = getch();
 
@@ -375,9 +377,9 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
                             printf(" ");
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
+
                             NINJA[n].x = NINJA[n].x - 1;
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = 'N';
+
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(DARKGRAY);
                             printf(" ");
@@ -393,9 +395,9 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
                             printf(" ");
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
+
                             NINJA[n].x = NINJA[n].x + 1;
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = 'N';
+
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(DARKGRAY);
                             printf(" ");
@@ -411,9 +413,9 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
                             printf(" ");
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
+
                             NINJA[n].y = NINJA[n].y + 1;
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = 'N';
+
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(DARKGRAY);
                             printf(" ");
@@ -429,9 +431,9 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
                             printf(" ");
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
+
                             NINJA[n].y = NINJA[n].y - 1;
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = 'N';
+
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(DARKGRAY);
                             printf(" ");
