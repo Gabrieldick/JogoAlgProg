@@ -10,8 +10,7 @@
 #include "func.h"
 
 
-// Limpa o buffer do teclado
-void flush_in()
+void flush_in() // Limpa o buffer do teclado
 {
     int ch;
     while ((ch = fgetc(stdin)) != EOF && ch != '\n')
@@ -19,34 +18,47 @@ void flush_in()
     }
 }
 
+void clearscreen() //limpa a tela
+{
+    #ifdef _WIN32
+        system("cls");
+
+    #elif _POSIX_C_SOURCE >= 199309L
+        system("clear");
+
+    #endif
+}
+
 int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
 {
-    int i, j, erro;
-
-
+    int i, j;
+    char cn[1] = { "\n" };
     if (arq == NULL)
     {
         printf("\nNível ainda não produzido!");
-        erro = 1;
+        return 1;
     }
     else
     {
-        erro = 0;
         for (i = 0; i < LIN; i++)
         {
             for (j = 0; j < COL; j++)
             {
-                fscanf(arq, "%c", &mapa[i][j]);
+                if(i==(LIN-1) && j == (COL-1)) //evita sujeira no ultimo caractere que não existe no arquivo
+                    {
+                        mapa[i][j] = cn[0]; //armazena um \n no ultimo caractere do mapa
+                    }
+
+                else
+                    fscanf(arq, "%c", &mapa[i][j]);
             }
         }
-
+         return 0;
     }
 
-
-    return erro;
 }
 
-void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves, int ninja_morto[], int *carregando)
+void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves, int ninja_morto[], int carregando)
 {
     int i, j, n = 0;
 
@@ -68,7 +80,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 textbackground(YELLOW);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'N' && *carregando == 0)
+            else if (mapa[i][j] == 'N' && carregando == 0)
             {
                 NINJA[n].x = wherex();
                 NINJA[n].y = wherey();
@@ -77,7 +89,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 printf(" ");
                 *QtdNinjas = *QtdNinjas + 1;
             }
-            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && *carregando == 1)
+            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && carregando == 1)
             {
                 n++;
                 if(ninja_morto[n] == 0)
@@ -132,13 +144,13 @@ char menu()
 {
     char option;
 
-    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("\n\n\n\n\n\n\n\n\n\n");
     printf("\t\t\t\t\t\tN - Novo jogo \n");
     printf("\t\t\t\t\t\tC - Carregar jogo \n");
     printf("\t\t\t\t\t\tS - Salvar jogo \n");
     printf("\t\t\t\t\t\tQ - Sair do jogo \n");
     printf("\t\t\t\t\t\tV - Voltar");
-    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("\n\n\n\n\n\n\n\n\n\n\n");
 
     option = getch();
 
@@ -398,7 +410,7 @@ void hidecursor()
 
 void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdNinjas, PERSONAGEM naruto)
 {
-    int mov_ninja, valid_move = 1, n = 0, andou = 0;
+    int mov_ninja, valid_move = 1, n = 0;
     for (n = 0; n < QtdNinjas; n++)
     {
         if (ninja_morto[n] == 0)
@@ -520,113 +532,116 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
     int i, matou = 0;
     for(i = 0; i < QtdNinjas; i++)
     {
-
-            if (tiro_ninja[i] == 1 && ninja_morto[i]==0)
+        if (tiro_ninja[i] == 1 && ninja_morto[i]==0)
+        {
+            switch (dir_ninja[i])
             {
-                switch (dir_ninja[i])
-                {
-                    case 1: // atira pra esquerda
-                            if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs - 2] != '#')
+                case 1: // atira pra esquerda
+                        if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs - 2] != '#')
+                        {
+                            textbackground(BLACK);
+
+                            gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                            printf(" ");
+
+
+                            gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
+
+                            textcolor(LIGHTGRAY);
+                            printf("x");
+
+                            if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
                             {
                                 textbackground(BLACK);
-
-                                gotoxy(NINJA[i].Xs, NINJA[i].Ys);
-                                printf(" ");
-
-
                                 gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
-
-                                textcolor(LIGHTGRAY);
-                                printf("x");
-
-                                if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
-                                {
-                                    textbackground(BLACK);
-                                    gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
-                                    printf(" ");
-
-                                    gotoxy(naruto->x, naruto->y);
-
-                                    printf(" ");
-                                    naruto->vidas = naruto->vidas - 1;
-                                    matou = 1;
-                                    naruto->x = 2;
-                                    naruto->y = 2;
-                                    gotoxy(naruto->x, naruto->y);
-                                    textbackground(YELLOW);
-                                    printf(" ");
-                                }
-                                NINJA[i].Xs--;
-                                if (matou == 1)
-                                {
-                                    tiro_ninja[i] = 0;
-                                    atualiza_sn[i] = 1;
-                                }
-                            }
-                            else
-                            {
-                                textbackground(BLACK);
-                                gotoxy(NINJA[i].Xs, NINJA[i].Ys);
                                 printf(" ");
 
+                                gotoxy(naruto->x, naruto->y);
+
+                                printf(" ");
+                                naruto->vidas = naruto->vidas - 1;
+                                matou = 1;
+                                naruto->x = 2;
+                                naruto->y = 2;
+                                gotoxy(naruto->x, naruto->y);
+                                textbackground(YELLOW);
+                                printf(" ");
+                            }
+
+                            NINJA[i].Xs--;
+                            if (matou == 1)
+                            {
                                 tiro_ninja[i] = 0;
                                 atualiza_sn[i] = 1;
                             }
+                        }
+
+                        else
+                        {
+                            textbackground(BLACK);
+                            gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                            printf(" ");
+
+                            tiro_ninja[i] = 0;
+                            atualiza_sn[i] = 1;
+                        }
+
                         break;
 
-                    case 0: //atira pra direita
-                                if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs] != '#')
-                                {
-                                    textbackground(BLACK);
+                case 0: //atira pra direita
+                        if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs] != '#')
+                        {
+                            textbackground(BLACK);
 
-                                        gotoxy(NINJA[i].Xs, NINJA[i].Ys);
-                                        printf(" ");
+                            gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                            printf(" ");
 
 
-                                    gotoxy(NINJA[i].Xs +1, NINJA[i].Ys);
+                            gotoxy(NINJA[i].Xs +1, NINJA[i].Ys);
 
-                                    textcolor(LIGHTGRAY);
-                                    printf("x");
+                            textcolor(LIGHTGRAY);
+                            printf("x");
 
-                                    if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
-                                    {
-                                        textbackground(BLACK);
-                                        gotoxy(NINJA[i].Xs + 1, NINJA[i].Ys);
-                                        printf(" ");
+                            if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
+                            {
+                                textbackground(BLACK);
+                                gotoxy(NINJA[i].Xs + 1, NINJA[i].Ys);
+                                printf(" ");
 
-                                        gotoxy(naruto->x, naruto->y);
+                                gotoxy(naruto->x, naruto->y);
 
-                                        printf(" ");
-                                        naruto->vidas = naruto->vidas - 1;
-                                        matou = 1;
-                                        naruto->x = 2;
-                                        naruto->y = 2;
-                                        gotoxy(naruto->x, naruto->y);
-                                        textbackground(YELLOW);
-                                        printf(" ");
-                                    }
-                                    if (matou == 1)
-                                    {
-                                        tiro_ninja[i] = 0;
-                                        atualiza_sn[i] = 1;
-                                    }
-                                    NINJA[i].Xs++;
-                                }
-                                else
-                                {
-                                    textbackground(BLACK);
-                                    gotoxy(NINJA[i].Xs, NINJA[i].Ys);
-                                    printf(" ");
-                                    tiro_ninja[i] = 0;
-                                    atualiza_sn[i] = 1;
-                                }
+                                printf(" ");
+                                naruto->vidas = naruto->vidas - 1;
+                                matou = 1;
+                                naruto->x = 2;
+                                naruto->y = 2;
+                                gotoxy(naruto->x, naruto->y);
+                                textbackground(YELLOW);
+                                printf(" ");
+                            }
+
+                            if (matou == 1)
+                            {
+                                tiro_ninja[i] = 0;
+                                atualiza_sn[i] = 1;
+                            }
+
+                            NINJA[i].Xs++;
+                        }
+
+                        else
+                        {
+                            textbackground(BLACK);
+                            gotoxy(NINJA[i].Xs, NINJA[i].Ys);
+                            printf(" ");
+                            tiro_ninja[i] = 0;
+                            atualiza_sn[i] = 1;
+                        }
+
                         break;
                 }
             }
-
     }
-
-
 }
 
 
@@ -721,4 +736,195 @@ void cheat(char ch, int *estado, int *covarde)
                   *estado = 0;
                   break;
                 }
+}
+
+int salva(char mapa[LIN][COL], float duracao, int level, int vidas, int pontos, int chaves, int abatidos, int shurikens, VETOR pos_shuriken, int flag_tiro, char prox_ch, int QtdNinjas, int tiro_ninja[], int ninja_morto[], int dir_ninja[], int atualiza_sn[], VETOR NINJA[])
+{
+    FILE *arq;
+    char nome[] = {"save.txt"};
+    int i, j;
+    char cn[1] = { "\n" };
+
+    if( (arq = fopen(nome,"w")) == NULL) // abertura para escrita
+        return 1; //retorna erro ao tentar salvar o arquivo
+
+    else
+    {
+        for(i = 0; i < LIN; i++)
+        {
+            for(j = 0; j  < COL; j++)
+            {
+                fprintf(arq, "%c", mapa[i][j]); //salva o caractere atual da matriz do mapa no arquivo
+            }
+
+        }
+
+        fprintf(arq, "%f",  duracao);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", level);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", vidas);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d",  pontos);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", chaves);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", abatidos);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", shurikens);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", pos_shuriken.x);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", pos_shuriken.y);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", flag_tiro);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%c", prox_ch);
+        fprintf(arq, "%c", cn[0]);
+        fprintf(arq, "%d", QtdNinjas);
+        fprintf(arq, "%c", cn[0]);
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fprintf(arq, "%d", tiro_ninja[i]);
+            fprintf(arq, "%c", cn[0]);
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fprintf(arq, "%d",ninja_morto[i]);
+            fprintf(arq, "%c", cn[0]);
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fprintf(arq, "%d", dir_ninja[i]);
+            fprintf(arq, "%c", cn[0]);
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fprintf(arq, "%d", atualiza_sn[i]);
+            fprintf(arq, "%c", cn[0]);
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fprintf(arq, "%d", NINJA[i].x);
+            fprintf(arq, "%c", cn[0]);
+            fprintf(arq, "%d", NINJA[i].y);
+            fprintf(arq, "%c", cn[0]);
+            fprintf(arq, "%d", NINJA[i].Xs);
+            fprintf(arq, "%c", cn[0]);
+            fprintf(arq, "%d", NINJA[i].Ys);
+            fprintf(arq, "%c", cn[0]);
+        }
+
+        fclose(arq); //fecha o arquivo
+        return 0;
+    }
+
+}
+
+int carrega(FILE *arq, char nome_save[], char mapa[LIN][COL], float *duracao, int *level, int *vidas, int *pontos, int *chaves, int *abatidos, int *shurikens, VETOR *pos_shuriken, int *flag_tiro, char *prox_ch, int *QtdNinjas)
+{
+    char read[COL]; //tamanho auxiliar máximo a ser utilizado na leitura
+
+    if (arq == NULL) // abertura para leitura
+        return 1;   //retorna erro ao tentar carregar o arquivo
+
+    else
+    {
+        copia_mapa(mapa, arq, nome_save);
+
+        fgets(read, COL, arq); //ajusta a linha de leitura após a função copia mapa
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *duracao = atof(read); //converte a string para float
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *level = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *vidas = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *pontos = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *chaves = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *abatidos = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *shurikens = atoi(read); //converte a string para int
+
+       fgets(read, COL, arq); //coleta a string da linha atual
+        pos_shuriken->x = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        pos_shuriken->x = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *flag_tiro = atoi(read); //converte a string para int
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *prox_ch = read[0]; //armazena a posição 0 pois prox_ch só tem 1 caractere
+
+        fgets(read, COL, arq); //coleta a string da linha atual
+        *QtdNinjas = atoi(read); //converte a string para int
+
+        return 0;
+    }
+
+}
+
+int carrega_ninja(FILE *arq, int QtdNinjas, int tiro_ninja[], int ninja_morto[], int dir_ninja[], int atualiza_sn[], VETOR NINJA[])
+{
+    int i;
+    char read[COL]; //tamanho auxiliar máximo a ser utilizado na leitura
+
+    if (arq == NULL) // abertura para leitura
+        return 1; //retorna erro ao tentar carregar o arquivo
+
+    else
+    {
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fgets(read, COL, arq); //coleta a string da linha atual
+            tiro_ninja[i] = atoi(read); //converte a string para int;
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fgets(read, COL, arq); //coleta a string da linha atual
+            ninja_morto[i] = atoi(read); //converte a string para int
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fgets(read, COL, arq); //coleta a string da linha atual
+            dir_ninja[i] = atoi(read); //converte a string para int
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fgets(read, COL, arq); //coleta a string da linha atual
+            atualiza_sn[i] = atoi(read); //converte a string para int
+        }
+
+        for(i = 0; i < QtdNinjas; i++)
+        {
+            fgets(read, COL, arq); //coleta a string da linha atual
+            NINJA[i].x = atoi(read); //converte a string para int
+            fgets(read, COL, arq); //coleta a string da linha atual
+            NINJA[i].y = atoi(read); //converte a string para int
+            fgets(read, COL, arq); //coleta a string da linha atual
+            NINJA[i].Xs = atoi(read); //converte a string para int
+            fgets(read, COL, arq); //coleta a string da linha atual
+            NINJA[i].Ys = atoi(read); //converte a string para int
+        }
+        return 0;
+    }
 }

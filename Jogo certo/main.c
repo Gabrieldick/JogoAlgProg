@@ -31,12 +31,24 @@ int main()
     int tiro_ninja[QtdNinjasMAX];
     int dir_ninja[QtdNinjasMAX];
     int atualiza_sn[QtdNinjasMAX];
+    int level_inicial;
+    float save_time=0;
+    char nome_save[] = {"save.txt"};
 
     pos_arm.x = 1;
     pos_arm.y = 1;
     naruto.pontos = 0;
     naruto.shurikens = 7;
     naruto.vidas = Vidas_inicio;
+
+    for(i = 0; i < QtdNinjasMAX; i++)
+    {
+        ninja_morto[i] = 0;
+        tiro_ninja[i] = 0;
+        dir_ninja[i] = 0;
+        atualiza_sn[i] = 1;
+
+    }
 
     hidecursor();
 
@@ -49,6 +61,8 @@ int main()
                   break;
     }
 
+    fclose(arq);
+
     do
     {
         option = menu();
@@ -56,33 +70,53 @@ int main()
         switch (toupper(option))
         {
             case 'S':
-                printf("\n\nInicie um jogo para salvar!\n\n");
+                clearscreen();
+                printf("Inicie um jogo para salvar!\n\n");
+                erro = 1;
                 break;
 
-            case'Q':
+            case 'Q':
+                clearscreen();
+                printf("\n\n\n\n\n\n\n\n");
+                printf("\t\t\t\t\tJogo encerrado\n\n\n\n\n");
                 exit(0);
                 break;
 
-            case'C':
-                //Carrega jogo
+            case 'C':
+                clearscreen();
+                arq = fopen(nome_save, "r");
+                if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &prox_ch, &QtdNinjas)) //carrega os dados básicos do jogo
+                    printf("\nErro ao carregar jogo!\n");
+
+                else if(carrega_ninja(arq, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //Carrega os objetos em movimento do jogo
+                    printf("\nErro ao carregar jogo!\n");
+
+                else
+                    {
+                        fclose(arq);
+                        carregando = 1;
+                        erro = 0;
+                    }
+
                 break;
 
             case 'N':
-                break;
-
-            case 0:
+                erro = 0;
                 break;
 
             default:
-                printf("\n\nOpção invalida, digite novamente!\n\n");
+                clearscreen();
+                printf("Opção invalida, digite novamente!");
+                erro = 1;
         }
 
-    }while ((option != 'N' && option != 'n') || erro ==1);
+    }while (erro ==1);
 
+    tempo_game.comeco = clock(); //Começa a contar o tempo de jogo;
 
-    tempo_game.comeco = clock(); //Começa a contar o tempo de jogo
+    level_inicial = level;
 
-    for(level = 1; level<qtd_level && naruto.vidas>0; level++)
+    for(level = level_inicial; level<qtd_level && naruto.vidas>0; level++)
     {
         qtd_chaves = 0;
         QtdNinjas = 0;
@@ -91,29 +125,26 @@ int main()
         sprintf(nome, "mapa%d", level);
         strcat(nome, ".txt");
         arq = fopen(nome, "r");
-        erro = copia_mapa(mapa, arq, nome);
+
+        if(carregando == 0)
+            erro = copia_mapa(mapa, arq, nome);
+        else
+            erro = 0;
+
         fclose(arq);
         printf("\n");
         if (erro == 0)
         {
-            Sleep(1000);
-            clrscr();
+            carregando = 0;
+            //Sleep(1000);
+            clearscreen();
             textcolor(BLACK);
-            exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, &carregando);
+            exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, carregando);
             printf("\n");
         }
 
-         for(i = 0; i < QtdNinjas; i++)
-        {
-            ninja_morto[i] = 0;
-            tiro_ninja[i] = 0;
-            dir_ninja[i] = 0;
-            atualiza_sn[i] = 1;
-
-        }
-
         //loop em que o jogo funciona
-        while (ch != 27 && qtd_chaves>0 && naruto.vidas > 0)
+        while (ch != 27 && qtd_chaves>0 && naruto.vidas > 0 && carregando == 0)
         {
             for (l = 0; l < LIN; l++)
             {
@@ -143,6 +174,7 @@ int main()
                         textbackground(WHITE);
                         printf(" ");
                     }
+
                 }
             }
             for (n = 0; n<QtdNinjas; n++)
@@ -175,7 +207,7 @@ int main()
                   printf("              ");
             }
             gotoxy(1, 25);
-            printf("Tempo decorrido: %4.2lf\t", tempo_game.duracao);
+            printf("Tempo decorrido: %4.2lf\t", (tempo_game.duracao + save_time));
             printf("Vidas restantes: %d \n", naruto.vidas);
             printf("Pontos: %d \n", naruto.pontos);
             printf("Chaves obtidas: %d  \n", chaves);
@@ -236,6 +268,7 @@ int main()
                         break;
 
                     case 9: //tab
+
                         do
                         {
                             gotoxy(1, 300);
@@ -245,27 +278,51 @@ int main()
                             switch (toupper(opt_menu))
                             {
                                 case 'S':
-                                    //salva o jogo
+                                    if(salva(mapa, tempo_game.duracao, level,  naruto.vidas, naruto.pontos, chaves, matou_todos, naruto.shurikens, pos_shuriken, flag_tiro, prox_ch, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //salva o jogo
+                                        printf("\nErro ao salvar jogo!\n");
+
                                     break;
 
                                 case 'Q':
+                                    clearscreen();
+                                    printf("\n\n\n\n\n\n\n\n");
+                                    printf("\t\t\t\t\tJogo encerrado\n\n\n\n\n");
                                     exit(0);
                                     break;
 
                                 case 'C':
-                                    //Carrega jogo
+                                    clearscreen();
+                                    arq = fopen(nome_save, "r");
+                                    if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &prox_ch, &QtdNinjas)) //carrega os dados básicos do jogo
+                                        printf("\nErro ao carregar jogo!\n");
+
+                                    else if(carrega_ninja(arq, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //Carrega os objetos em movimento do jogo
+                                        printf("\nErro ao carregar jogo!\n");
+
+                                    else
+                                    {
+                                        fclose(arq);
+                                        tempo_game.comeco = clock(); //recomeça a contar o tempo de jogo
+                                        carregando = 1;
+                                        level --;
+                                        erro = 0;
+                                    }
+
                                     break;
 
                                 case 'V':
                                     break;
 
                                 case 'N': //reseta o jogo
+                                    clearscreen();
                                     qtd_chaves = 0;
                                     QtdNinjas = 0;
                                     naruto.pontos = 0;
                                     naruto.shurikens = 7;
                                     level = 1;
                                     covarde = 0;
+                                    save_time = 0;
+                                    matou_todos = 0;
                                     naruto.vidas = Vidas_inicio;
                                     sprintf(nome, "mapa%d", level);
                                     strcat(nome, ".txt");
@@ -275,11 +332,10 @@ int main()
                                     printf("\n");
                                     if (erro == 0)
                                     {
-                                        Sleep(1000);
-                                        clrscr();
+                                        clearscreen();
                                         textcolor(BLACK);
                                         carregando = 0;
-                                        exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, &carregando);
+                                        exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, carregando);
                                         printf("\n");
                                     }
                                      for(i = 0; i < QtdNinjas; i++)
@@ -335,14 +391,9 @@ int main()
             }
             atira_ninja(covarde, dir_ninja, mapa, &naruto, NINJA, ninja_morto, QtdNinjas, tiro_ninja, atualiza_sn);
 
-
         }
 
-
-
-
-        Sleep(2500);
-        clrscr();
+        clearscreen();
         gotoxy(20, 6);
         if (naruto.vidas==0)
         {
@@ -355,18 +406,21 @@ int main()
             textbackground(LIGHTBLUE);
             textcolor(BLACK);
             printf("LEVEL COMPLETO!!!\n\n");
+            carregando = 0;
         }
         textbackground(BLACK);
         textcolor(WHITE);
     }
+
     if (level == qtd_level)
-        {
-            clrscr();
-            gotoxy(20, 6);
-            textbackground(LIGHTBLUE);
-            textcolor(BLACK);
-            printf("JOGO COMPLETO!!!\n\n");
-        }
+    {
+        clearscreen();
+        gotoxy(20, 6);
+        textbackground(LIGHTBLUE);
+        textcolor(BLACK);
+        printf("JOGO COMPLETO!!!\n\n");
+    }
+
     system("pause");
     return 0;
 }
