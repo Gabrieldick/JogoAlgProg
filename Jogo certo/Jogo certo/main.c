@@ -13,37 +13,35 @@
 
 int main()
 {
-    srand(time(NULL));
-    setlocale(LC_CTYPE, "");
-    int covarde = 0, estado=0, carregando = 0;
-    TEMPO tempo, t_ammo, tempo_game, tiro_naruto;
-    char mapa[LIN][COL], option, opt_menu;
-    char nome[C];
-    char ch = 0, prox_ch = 'd';
-    char ch_tiro =0;
-    int  n, i, l, c;
-    int ninja_morto[QtdNinjasMAX] = {0}, flag_ninja = 1, matou_todos = 0, flag_tiro=1, atualiza_xys=1;
-    FILE *arq;
-    int chaves = 0, erro = 0, qtd_chaves = 0;
-    int  QtdNinjas = 0, level = 1, qtd_level;
-    PERSONAGEM naruto;
-    VETOR pos_arm, pos_shuriken, NINJA[QtdNinjasMAX];
-    int tiro_ninja[QtdNinjasMAX];
-    int dir_ninja[QtdNinjasMAX];
-    int atualiza_sn[QtdNinjasMAX];
-    int level_inicial;
-    float save_time=0;
-    char nome_save[] = {"save.txt"};
+    srand(time(NULL)); //gera valores aleatorios para utilizar na movimetação dos inimigos
+    setlocale(LC_CTYPE, ""); //muda o idioma de exibição para o padrão atual do sistema
+    int covarde = 0, estado=0, carregando = 0; //variaveis de controle do cheat e de loading do mapa
+    TEMPO tempo, t_ammo, tempo_game, tiro_naruto; //variaveis para uso nos timers
+    char mapa[LIN][COL], option, opt_menu; //copia do mapa da fase atual e variaveis de controle do menu
+    char nome[C]; //string para o nome da fase atual
+    char ch, prox_ch = 'd'; //variaveis de controle
+    char ch_tiro; //variavel de controle direção da shuriken do personagem
+    int  n, i, l, c; //varaveis para uso em for
+    int ninja_morto[QtdNinjasMAX] = {0}, flag_ninja = 1, abatidos = 0, flag_tiro=0; //vetor com o estado dos ninjas, flag auxiliar para timing para movimentação do ninja, quantidade de inimigos abatidos
+    FILE *arq; //ponteiro para o arquivo
+    int chaves = 0, erro = 0, qtd_chaves = 0; //quantidade de chaves coletadas, flag de erro, quantidade total de erros
+    int  QtdNinjas = 0, level = 1, qtd_level; //quantidade total de ninjas no mapa, level atual do mapa, quantidade total de mapas
+    PERSONAGEM naruto; //struct com informações do personagem
+    VETOR pos_shuriken, NINJA[QtdNinjasMAX]; //vetor com coordenadas da shuriken do ninja e estrutura com posição de cada ninja e posição da shuriken de cada
+    int tiro_ninja[QtdNinjasMAX]; //vetor com flags de controle sobre o estado dos tiros de cada ninja
+    int dir_ninja[QtdNinjasMAX]; //direção de movimento de cada ninja
+    int atualiza_sn[QtdNinjasMAX]; //vetor para atualizar a posição da shuriken de cada ninja
+    int level_inicial; //variavel com o level inicial ou level atual carregado
+    float save_time=0; //variavel auxiliar para o tempo salvo de um jogo
+    char nome_save[] = {"save.txt"}; //variavel auxiliar para abrir o save do jogo
 
-    pos_arm.x = 1;
-    pos_arm.y = 1;
-    naruto.pontos = 0;
-    naruto.shurikens = 7;
-    naruto.vidas = Vidas_inicio;
+    naruto.pontos = 0; //zera a quantidade inicial de pontos do personagem
+    naruto.shurikens = 7; //quanitade inicial de shurikens disponiveis par ao usuario
+    naruto.vidas = Vidas_inicio; //quantidade inicial de vidas do naruto
 
-    hidecursor();
+    hidecursor(); //função para ocultar o cursor
 
-    for (qtd_level = 1; qtd_level<lvlMAX; qtd_level++)
+    for (qtd_level = 1; qtd_level<lvlMAX; qtd_level++) //identifica a quantidade total de mapas na pasta onde está o jogo
     {
             sprintf(nome, "mapa%d", qtd_level);
             strcat(nome, ".txt");
@@ -52,31 +50,31 @@ int main()
                   break;
     }
 
-    fclose(arq);
+    fclose(arq); //fecha o arquivo aberto
 
-    do
+    do //looping para execução do menu principal
     {
-        option = menu();
+        option = menu(); //função para exibir o menu principal
 
         switch (toupper(option))
         {
-            case 'S':
-                clearscreen();
+            case 'S': //opção de salvar o jogo
+                clearscreen(); //função par alimpar a tela
                 printf("Inicie um jogo para salvar!\n\n");
                 erro = 1;
                 break;
 
-            case 'Q':
-                clearscreen();
+            case 'Q': //opção para sair do jogo
+                clearscreen(); //função para limpar a tela
                 printf("\n\n\n\n\n\n\n\n");
                 printf("\t\t\t\t\tJogo encerrado\n\n\n\n\n");
                 exit(0);
                 break;
 
-            case 'C':
-                clearscreen();
+            case 'C': //opção para carregar um jogo já salvo
+                clearscreen(); //função para limpar a tela
                 arq = fopen(nome_save, "r");
-                if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &prox_ch, &QtdNinjas)) //carrega os dados básicos do jogo
+                if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &abatidos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &ch_tiro, &QtdNinjas)) //carrega os dados básicos do jogo
                     printf("\nErro ao carregar jogo!\n");
 
                 else if(carrega_ninja(arq, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //Carrega os objetos em movimento do jogo
@@ -84,38 +82,37 @@ int main()
 
                 else
                     {
-                        fclose(arq);
-                        carregando = 1;
-                        erro = 0;
+                        fclose(arq); //fecha o arquivo aberto
+                        carregando = 1; //sinaliza que foi carregado um jogo
+                        erro = 0; //sem erros para carregar
                     }
 
                 break;
 
-            case 'N':
+            case 'N': //opção para inicializar um novo jogo
                 erro = 0;
                 break;
 
-            default:
+            default: //caso alguma opção diferente
                 clearscreen();
                 printf("Opção invalida, digite novamente!");
                 erro = 1;
         }
 
-    }while (erro ==1);
+    }while (erro == 1); //permanece no menu enquanto não houver uma opção válida
 
-    tempo_game.comeco = clock(); //Começa a contar o tempo de jogo;
+    tempo_game.comeco = clock(); //Começa a contar o tempo de jogo
 
-    level_inicial = level;
+    level_inicial = level; //atribui o level inicial para o level 1 ou o carregado
 
-    for(level = level_inicial; level<qtd_level && naruto.vidas>0; level++)
+    for(level = level_inicial; level<qtd_level && naruto.vidas>0; level++) //looping principal em que roda o jogo
     {
-        qtd_chaves = 0;
+        qtd_chaves = 0; //redefine a quantidade de chaves do mapa para zero
 
-
-        if(carregando == 0)
+        if(carregando == 0) //se não estiver carregando um save
         {
             QtdNinjas = 0;
-            for(i = 0; i < QtdNinjasMAX; i++)
+            for(i = 0; i < QtdNinjasMAX; i++) //identifica a quantidade total de ninjas do mapa atual e redefine suas informações
             {
                 ninja_morto[i] = 0;
                 tiro_ninja[i] = 0;
@@ -129,57 +126,64 @@ int main()
         strcat(nome, ".txt");
         arq = fopen(nome, "r");
 
-        if(carregando == 0)
+        if(carregando == 0) //se não estiver com um loading, copia o mapa da fase atual
             erro = copia_mapa(mapa, arq, nome);
         else
-            erro = 0;
+            erro = 0; //sem erros
 
-        fclose(arq);
+        fclose(arq); //fecha o arquivo aberto
         printf("\n");
-        if (erro == 0)
+        if (erro == 0) //se não aconteceu erros, prepara exibição do mapa
         {
             clearscreen();
             textcolor(BLACK);
             exibe_mapa(&naruto, mapa, NINJA, &QtdNinjas, &qtd_chaves, ninja_morto, carregando);
+
             carregando = 0;
             printf("\n");
         }
 
         //loop em que o jogo funciona
-        while (ch != 27 && qtd_chaves>0 && naruto.vidas > 0 && carregando == 0)
+        while (qtd_chaves>0 && naruto.vidas > 0 && carregando == 0)
         {
             for (l = 0; l < LIN; l++)
             {
                 for (c = 0; c < COL; c++)
                 {
-                    if (mapa[l][c] == 'X')
+                    if (mapa[l][c] == 'X') //não deixa as armadilhas sumirem
                     {
                         gotoxy(c+1, l+1);
                         textbackground(RED);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == 'C')
+                    else if (mapa[l][c] == 'C')//não deixa as chaves sumirem
                     {
                         gotoxy(c+1, l+1);
                         textbackground(BLUE);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == 'Z')
+                    else if (mapa[l][c] == 'Z')//não deixa as shurikens sumirem
                     {
                         gotoxy(c+1, l+1);
                         textbackground(GREEN);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == '#')
+                    else if (mapa[l][c] == '#')//evita quaisquer bugs com a parede
                     {
                         gotoxy(c+1, l+1);
                         textbackground(WHITE);
                         printf(" ");
                     }
+                    else if (mapa[l][c] == 'J' && covarde == 1)//não deixa o jogador sumir quando covarde está ativo
+                    {
+                        gotoxy(c+1, l+1);
+                        textbackground(YELLOW);
+                        printf(" ");
+                    }
 
                 }
             }
-            for (n = 0; n<QtdNinjas; n++)
+            for (n = 0; n<QtdNinjas; n++) //substitui o corpo do ninja morto
             {
                 if (ninja_morto[n] == 0)
                 {
@@ -189,12 +193,12 @@ int main()
                 }
             }
 
-            set_clock(&tempo_game);
+            set_clock(&tempo_game); //prepara os timers para calculos durante o jogo
             textbackground(BLACK);
             textcolor(WHITE);
-            gotoxy(65, 1);
+            gotoxy(65, 1); //troca a posição de origem para exibição
             printf("Nível atual: %d\t", level);
-            if(covarde)
+            if(covarde) //se o cheat ativo, sinaliza
             {
                   gotoxy(65, 2);
                   textbackground(RED);
@@ -202,36 +206,35 @@ int main()
                   printf("COVARDE!!!");
             }
 
-            else
+            else //se o cheat desativado, exibição volta ao normal
             {
                   gotoxy(65, 2);
                   textbackground(BLACK);
                   printf("              ");
             }
-            gotoxy(1, 25);
-            printf("Tempo decorrido: %4.2lf\t", (tempo_game.duracao + save_time));
-            printf("Vidas restantes: %d \n", naruto.vidas);
-            printf("Pontos: %d \n", naruto.pontos);
-            printf("Chaves obtidas: %d  \n", chaves);
-            printf("Shurikens restantes: %d\n", naruto.shurikens);
-            printf("Inimigos abatidos: %d\n", matou_todos);
-
+            gotoxy(1, 24); //troca a posição de origem para exibição
+            printf("Tempo decorrido: %4.2lf\t", (tempo_game.duracao + save_time)); //exibe o tempo atual do jogo
+            printf("Vidas restantes: %d \n", naruto.vidas); //exibe a quantidade de vidas do naruto
+            printf("Pontos: %d \n", naruto.pontos); //exibe a pontuação atual
+            printf("Chaves obtidas: %d  \n", chaves); //exibe a quantidade de chaves coletadas
+            printf("Shurikens restantes: %d\n", naruto.shurikens); //exibe a quantidade de shurikens restantes
+            printf("Inimigos abatidos: %d\n", abatidos); //exibe a quantidade de inimigos abatidos
 
             textcolor(BLACK);
-            if (flag_ninja == 1)
+            if (flag_ninja == 1) //inicializa o timer para movimentação do ninja
             {
                 tempo.comeco = clock();
                 flag_ninja = 0;
             }
 
-            if (atualiza_xys==1)
+            if (flag_tiro==0) //atualiza a posição de origem da shuriken do personagem
             {
                 pos_shuriken.x = naruto.x;
                 pos_shuriken.y = naruto.y;
             }
             for(i = 0; i < QtdNinjas; i++)
             {
-                if(atualiza_sn[i] == 1)
+                if(atualiza_sn[i] == 1) //atualiza as posições de origem das shurikens dos ninjas
                 {
                     NINJA[i].Xs = NINJA[i].x + 1;
                     NINJA[i].Ys = NINJA[i].y;
@@ -255,16 +258,16 @@ int main()
                     case 107: //k
                         if (naruto.shurikens > 0)
                         {
-                            if(atualiza_xys == 1)
+                            if(flag_tiro == 0)
                             {
                                 if(!covarde)
                                     naruto.shurikens--;
                                 ch_tiro = prox_ch;
                             }
-                            atualiza_xys = 0;
+
                             flag_tiro = 1;
 
-                            atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &matou_todos, &i, &atualiza_xys, QtdNinjas, &naruto);
+                            atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &abatidos, &i, QtdNinjas, &naruto);
                         }
                         break;
 
@@ -279,7 +282,7 @@ int main()
                             switch (toupper(opt_menu))
                             {
                                 case 'S':
-                                    if(salva(mapa, tempo_game.duracao, level,  naruto.vidas, naruto.pontos, chaves, matou_todos, naruto.shurikens, pos_shuriken, flag_tiro, prox_ch, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //salva o jogo
+                                    if(salva(mapa, tempo_game.duracao, level,  naruto.vidas, naruto.pontos, chaves, abatidos, naruto.shurikens, pos_shuriken, flag_tiro, ch_tiro, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //salva o jogo
                                         printf("\nErro ao salvar jogo!\n");
 
                                     break;
@@ -294,7 +297,7 @@ int main()
                                 case 'C':
                                     clearscreen();
                                     arq = fopen(nome_save, "r");
-                                    if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &prox_ch, &QtdNinjas)) //carrega os dados básicos do jogo
+                                    if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &abatidos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &ch_tiro, &QtdNinjas)) //carrega os dados básicos do jogo
                                         printf("\nErro ao carregar jogo!\n");
 
                                     else if(carrega_ninja(arq, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //Carrega os objetos em movimento do jogo
@@ -324,7 +327,8 @@ int main()
                                     level = 1;
                                     covarde = 0;
                                     save_time = 0;
-                                    matou_todos = 0;
+                                    abatidos = 0;
+                                    flag_tiro = 0;
                                     naruto.vidas = Vidas_inicio;
                                     sprintf(nome, "mapa%d", level);
                                     strcat(nome, ".txt");
@@ -357,7 +361,7 @@ int main()
                         break;
 
                     default:
-                        anda(&naruto, ch, mapa, &pos_arm, &chaves, &qtd_chaves, covarde);
+                        anda(&naruto, ch, mapa, &chaves, &qtd_chaves, covarde);
                         ch = toupper(ch);
                         if (ch == 'A' || ch == 'D' || ch == 77 || ch == 75)
                             prox_ch = ch;
@@ -365,7 +369,7 @@ int main()
                 }
 
             }
-            atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &matou_todos, &i, &atualiza_xys, QtdNinjas, &naruto);
+            atira(&pos_shuriken, &flag_tiro, ch_tiro, mapa, NINJA, ninja_morto, &abatidos, &i, QtdNinjas, &naruto);
 
             if (tempo.duracao >= TIME_GAME && flag_ninja != 1)
             {

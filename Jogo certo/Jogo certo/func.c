@@ -29,7 +29,7 @@ void clearscreen() //limpa a tela
     #endif
 }
 
-int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
+int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[]) //Esta função copia o mapa com o nome da string para a matriz usada no programa
 {
     int i, j;
     char cn[1] = { "\n" };
@@ -62,25 +62,24 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
 {
     int i, j, n = 0;
 
-    printf("\n");
-    gotoxy(1, 1);
+    gotoxy(1, 1); //Ajusta o cursor para a posição inicial
     for (i = 0; i < LIN; i++)
     {
         for (j = 0; j < COL; j++)
         {
-            if (mapa[i][j] == '#')
+            if (mapa[i][j] == '#') //printa as paredes
             {
                 textbackground(WHITE);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'J')
+            else if (mapa[i][j] == 'J')//printa e define a posição do jogador
             {
                 naruto->x = j+1;
                 naruto->y = i+1;
                 textbackground(YELLOW);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'N' && carregando == 0)
+            else if (mapa[i][j] == 'N' && carregando == 0)//printa e define as posições dos ninjas se o jogo não estiver sendo carregado
             {
                 NINJA[n].x = wherex();
                 NINJA[n].y = wherey();
@@ -89,7 +88,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 printf(" ");
                 *QtdNinjas = *QtdNinjas + 1;
             }
-            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && carregando == 1)
+            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && carregando == 1)//printa os ninjas em caso de jogo sendo carregado
             {
 
                 if(ninja_morto[n] == 0)
@@ -99,18 +98,18 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 }
                 n++;
             }
-             else if (mapa[i][j] == 'Z')
+             else if (mapa[i][j] == 'Z')//printa e define as posições das shurikens adicionais
             {
                 textbackground(GREEN);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'C')
+            else if (mapa[i][j] == 'C')//printa e define as posições das chaves
             {
                 textbackground(BLUE);
                 printf(" ");
                 (*qtd_chaves)++;
             }
-            else if (mapa[i][j] == 'X')
+            else if (mapa[i][j] == 'X')//printa e define as posições das armadilhas
             {
                 textbackground(RED);
                 printf(" ");
@@ -118,7 +117,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
             else
             {
                 textbackground(BLACK);
-                printf("%c", mapa[i][j]); // testar se a impressão esta correta
+                printf("%c", mapa[i][j]); // printa os espaços sem nada
             }
         }
     }
@@ -127,21 +126,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
 
 }
 
-void le_nome(FILE *arq, char nome[])
-{
-    char i[2];
-
-
-    printf("\nSelecione o nível desejado para começar o jogo: ");
-    gets(i);
-
-    strcpy(nome, "mapa");
-    strcat(nome, i);
-    strcat(nome, ".txt");
-
-}
-
-char menu()
+char menu()// printa o menu do jogo
 {
     char option;
 
@@ -150,25 +135,29 @@ char menu()
     printf("\t\t\t\t\t\tC - Carregar jogo \n");
     printf("\t\t\t\t\t\tS - Salvar jogo \n");
     printf("\t\t\t\t\t\tQ - Sair do jogo \n");
-    printf("\t\t\t\t\t\tV - Voltar");
+    printf("\t\t\t\t\t\tV - Voltar\n\n");
+    printf("\t\t\t\t\t\tControles:\n");
+    printf("\t\t\t\t\t\t-WASD ou SETAS (movimentação)\n");
+    printf("\t\t\t\t\t\t-Espaço ou k (tiro)\n");
+    printf("\t\t\t\t\t\t-TAB para pausar");
     printf("\n\n\n\n\n\n\n\n\n\n\n");
 
-    option = getch();
+    option = getch(); //pega a opção sem printar ela na tela
 
     return option;
 }
 
-void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int *chaves, int *qtd_chaves, int covarde)
+void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], int *chaves, int *qtd_chaves, int covarde) //mexe o personagem principal pelo mapa
 {
-    int andou = 0;
-    switch ((ch))
+    int andou = 0; //inicia uma flag como falsa para o movimento do personagem
+    switch ((ch)) // sem o toupper para não dar conflito das setas com o "k" minúsculo utilizado no tiro
     {
         case 97:
         case 75:  // ArrowLeft
         case 'A': // a
             if (mapa[naruto->y - 1][naruto->x - 2] != '#')
             {
-                mapa[naruto->y - 1][naruto->x - 1] = ' ';
+                mapa[naruto->y - 1][naruto->x - 1] = ' '; //limpa a posição anterior do naruto na matriz
                 gotoxy(naruto->x, naruto->y);
                 textbackground(BLACK);
                 printf(" ");
@@ -185,7 +174,7 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
         case 'D': // d
             if (mapa[naruto->y - 1][naruto->x] != '#')
             {
-                mapa[naruto->y - 1][naruto->x - 1] = ' ';
+                mapa[naruto->y - 1][naruto->x - 1] = ' ';//limpa a posição anterior do naruto na matriz
                 gotoxy(naruto->x, naruto->y);
                 textbackground(BLACK);
                 printf(" ");
@@ -202,7 +191,7 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
         case 'S': // s
             if (mapa[naruto->y][naruto->x - 1] != '#')
             {
-                mapa[naruto->y - 1][naruto->x - 1] = ' ';
+                mapa[naruto->y - 1][naruto->x - 1] = ' ';//limpa a posição anterior do naruto na matriz
                 gotoxy(naruto->x, naruto->y);
                 textbackground(BLACK);
                 printf(" ");
@@ -219,7 +208,7 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
         case 'W': // w
             if (mapa[naruto->y - 2][naruto->x - 1] != '#')
             {
-                mapa[naruto->y - 1][naruto->x - 1] = ' ';
+                mapa[naruto->y - 1][naruto->x - 1] = ' ';//limpa a posição anterior do naruto na matriz//limpa a posição anterior do naruto na matriz
                 gotoxy(naruto->x, naruto->y);
                 textbackground(BLACK);
                 printf(" ");
@@ -230,110 +219,95 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
                 andou = 1;
             }
             break;
-
-        case 27:
-            puts("-- ESC!");
-            puts("--- FIM!----");
-            break;
     }
 
     if(andou == 1)
     {
         if ((mapa[naruto->y - 1][naruto->x - 1] == 'X') && covarde == 0)
         {
-            naruto->vidas = naruto->vidas - 1;
+            naruto->vidas = naruto->vidas - 1; //tira vida do naruto quando pisa numa armadilha
         }
         else if (mapa[naruto->y - 1][naruto->x - 1] == 'C')
         {
-            naruto->pontos = naruto->pontos + 50;
+            naruto->pontos = naruto->pontos + 50; //adiciona os pontos caso pise em uma chave
             *chaves = *chaves + 1;
-            (*qtd_chaves)--;
+            (*qtd_chaves)--;//diminui a quantidade restantes de chaves no mapa
         }
         else if (mapa[naruto->y - 1][naruto->x - 1] == 'Z')
         {
-            naruto->shurikens++;
+            naruto->shurikens++;//incrementa a qtd de shurikens do personagem
         }
-        mapa[naruto->y - 1][naruto->x - 1] = 'J';
+        mapa[naruto->y - 1][naruto->x - 1] = 'J';//Atualiza a posição do naruto na matriz, fazendo com que o personagem tenha sua posição salva diretamente na matriz
     }
 }
 
-void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL], VETOR NINJA[], int ninja_morto[], int *matou_todos, int *i, int *atualiza_xys, int QtdNinjas, PERSONAGEM *naruto)
+void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL], VETOR NINJA[], int ninja_morto[], int *matou_todos, int *i, int QtdNinjas, PERSONAGEM *naruto)
 {
-    int n, matou=0;
-    switch (toupper(prox_ch))
+    int n;
+
+    switch (toupper(prox_ch)) // verifica o último caracter pressionado para direcionar o tiro
     {
         case 77: // ArrowRight
         case 'D':
-            if (*flag_tiro == 1 )
+            if (*flag_tiro == 1 ) //só roda o restante da função quando um tiro foi iniciado
             {
-                if (mapa[pos_shuriken->y - 1][pos_shuriken->x] != '#')
+                if (mapa[pos_shuriken->y - 1][pos_shuriken->x] != '#') //verifica se a shuriken atingiu uma parede
                 {
-                    textbackground(BLACK);
-                    if(pos_shuriken->x > naruto->x)
+                    textbackground(BLACK);//background preto para "apagar" um caracter
+
+                    if(pos_shuriken->x > naruto->x) //apaga a shuriken somente quando esta numa posição a frente do jogador (evita apagar o jogador do mapa)
                     {
                         gotoxy(pos_shuriken->x, pos_shuriken->y);
                         printf(" ");
                     }
 
-                    gotoxy(pos_shuriken->x + 1, pos_shuriken->y);
-
+                    gotoxy(pos_shuriken->x + 1, pos_shuriken->y); //printa a shuriken na posição seguinte
                     textcolor(YELLOW);
                     printf("x");
 
 
 
-                    for (n = 0; n < QtdNinjas; n++)
+                    for (n = 0; n < QtdNinjas; n++)//faz uma varredura de todos os inimigos
                     {
-                        if (pos_shuriken->x == NINJA[n].x && pos_shuriken->y == NINJA[n].y)
+                        if (pos_shuriken->x == NINJA[n].x && pos_shuriken->y == NINJA[n].y) //shuriken atingiu um inimigo
                         {
-                            textbackground(BLACK);
-
+                            textbackground(BLACK); //apaga a shuriken
                             gotoxy(pos_shuriken->x + 1, pos_shuriken->y);
                             printf(" ");
 
-                            gotoxy(NINJA[n].Xs, NINJA[n].Ys);
+                            gotoxy(NINJA[n].x, NINJA[n].y);//apaga o inimigo que foi morto
                             printf(" ");
 
-                            gotoxy(NINJA[n].x, NINJA[n].y);
+                            ninja_morto[n] = 1;//declara o inimigo como morto(para de considerá-lo para as operações normais)
 
-                            printf(" ");
-                            ninja_morto[n] = 1;
-                            NINJA[n].x = 1;
+                            NINJA[n].x = 1; //coloca o ninja que foi morto em uma posição onde não pode ser alcançado
                             NINJA[n].y = 1;
-                            mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
-                            *matou_todos = *matou_todos + 1;
-                            matou = 1;
-                            naruto->pontos = naruto->pontos + 20;
-                        }
-                        if (matou == 1)
-                        {
-                            *atualiza_xys = 1;
-                            *flag_tiro = 0;
-                        }
 
+                            *matou_todos = *matou_todos + 1;//incrementa a quantidade de inimigos abatidos
+
+                           *flag_tiro = 0; //finaliza o tiro
+
+                            naruto->pontos = naruto->pontos + 20;//incrementa pontuação
+                        }
                     }
-                    pos_shuriken->x = pos_shuriken->x + 1;
+                    pos_shuriken->x = pos_shuriken->x + 1;//atualiza a posição da shuriken
                     *i = *i + 1;
                 }
                 else
                 {
-                    textbackground(BLACK);
+                    textbackground(BLACK); //caso o tiro encontre uma parede, finaliza o tiro e apaga a shuriken
                     gotoxy(pos_shuriken->x, pos_shuriken->y);
                     printf(" ");
                     *flag_tiro = 0;
-                    *atualiza_xys = 1;
+
                 }
             }
-            else
-            {
 
-                *atualiza_xys = 1;
-            }
             break;
 
         case 75: // ArrowLeft
         case 'A':
-            if (*flag_tiro == 1)
+            if (*flag_tiro == 1) // procedimento igual ao anterior, só que atirando na outra direção
             {
                 if (mapa[pos_shuriken->y - 1][pos_shuriken->x - 2] != '#')
                 {
@@ -372,13 +346,7 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                             NINJA[n].y = 1;
                             mapa[NINJA[n].y - 1][NINJA[n].x - 1] = ' ';
                             *matou_todos = *matou_todos + 1;
-                            matou = 1;
                             naruto->pontos = naruto->pontos + 20;
-                        }
-                        if (matou == 1)
-                        {
-                            *flag_tiro = 0;
-                            *atualiza_xys = 1;
                         }
                     }
                     pos_shuriken->x = pos_shuriken->x - 1;
@@ -389,18 +357,15 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                     gotoxy(pos_shuriken->x, pos_shuriken->y);
                     printf(" ");
                     *flag_tiro = 0;
-                    *atualiza_xys = 1;
+
                 }
             }
-            else
-            {
-                *atualiza_xys = 1;
-            }
+
             break;
     }
 }
 
-void hidecursor()
+void hidecursor() //Função para esconder o indicador da posição do cursor implementada pelo professor
 {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
@@ -412,43 +377,43 @@ void hidecursor()
 void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdNinjas, PERSONAGEM naruto)
 {
     int mov_ninja, valid_move = 1, n = 0;
-    for (n = 0; n < QtdNinjas; n++)
+    for (n = 0; n < QtdNinjas; n++)//faz a varredura dos inimigos
     {
-        if (ninja_morto[n] == 0)
+        if (ninja_morto[n] == 0) //só realiza as operações para os ninjas que ainda não foram eliminados
         {
             do
             {
-                if (sqrt(pow((NINJA[n].x - naruto.x), 2)+pow((NINJA[n].y - naruto.y), 2))<500 && valid_move == 1)
+                if (sqrt(pow((NINJA[n].x - naruto.x), 2)+pow((NINJA[n].y - naruto.y), 2))<25 && valid_move == 1)//aplica a movimentação inteligente para inimigos com até 25 casas de distancia do jogador
                     mov_ninja = mov_inteligente(NINJA, naruto, n);
                 else
                 {
-                    mov_ninja = round(1 + ((float)rand() / RAND_MAX) * (4 - 1));
+                    mov_ninja = round(1 + ((float)rand() / RAND_MAX) * (4 - 1));//caso a movimentação inteligente não esteja habilitada ou não seja um movimento valido, seleciona uma direção aleatória
                     valid_move = 1;
                 }
 
 
                 switch (mov_ninja)
                 {
-                    case 1: // a
-                        if (mapa[NINJA[n].y - 1][NINJA[n].x - 2] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'J' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'Z' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'C' )
+                    case 1: // movimento para esquerda
+                        if (mapa[NINJA[n].y - 1][NINJA[n].x - 2] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x - 2] != 'J')//não realiza o movimento quando encontra uma posição vazia
                         {
-                            gotoxy(NINJA[n].x, NINJA[n].y);
+                            gotoxy(NINJA[n].x, NINJA[n].y); //apaga o ninja de sua posição atual
                             textbackground(BLACK);
                             printf(" ");
 
-                            NINJA[n].x = NINJA[n].x - 1;
-
+                            NINJA[n].x = NINJA[n].x - 1;//printa o inimigo na nova posição
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(DARKGRAY);
                             printf(" ");
+
                             valid_move = 1;
                         }
                         else
-                            valid_move = 0;
+                            valid_move = 0; // caso encontre uma parede ou o jogador, considera como movimento inválido
                         break;
 
-                    case 2: // d
-                        if (mapa[NINJA[n].y - 1][NINJA[n].x] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'J' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'C' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'Z')
+                    case 2: // movimento para a direita
+                        if (mapa[NINJA[n].y - 1][NINJA[n].x] != '#' && mapa[NINJA[n].y - 1][NINJA[n].x] != 'J')
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -465,8 +430,8 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                             valid_move = 0;
                         break;
 
-                    case 3: // s
-                        if (mapa[NINJA[n].y][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'J' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'Z' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'C')
+                    case 3: // movimento para baixo
+                        if (mapa[NINJA[n].y][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y][NINJA[n].x - 1] != 'J')
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -483,8 +448,8 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                             valid_move = 0;
                         break;
 
-                    case 4: // w
-                        if (mapa[NINJA[n].y - 2][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'J' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'C' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'Z')
+                    case 4: // movimento para cima
+                        if (mapa[NINJA[n].y - 2][NINJA[n].x - 1] != '#' && mapa[NINJA[n].y - 2][NINJA[n].x - 1] != 'J')
                         {
                             gotoxy(NINJA[n].x, NINJA[n].y);
                             textbackground(BLACK);
@@ -505,24 +470,13 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
                         valid_move = 0;
                         break;
                 }
-            } while (valid_move == 0);
+            } while (valid_move == 0); //fica "buscando" movimentos até encontrar um válido
         }
     }
 }
 
-void recarrega_ammo(PERSONAGEM *naruto, TEMPO *t_ammo)
-{
-    t_ammo->comeco = clock();
-    t_ammo->duracao = 0;
-    if (t_ammo->duracao < 1.75)
-    {
-        t_ammo->fim = clock();
-        t_ammo->duracao = (double)(t_ammo->fim - t_ammo->comeco) / CLOCKS_PER_SEC;
-    }
-    naruto->shurikens = 5;
-}
 
-void set_clock(TEMPO *tempo)
+void set_clock(TEMPO *tempo)//Deixa todos os cálculos prontos para a utilização de algum timer no jogo
 {
     tempo->fim = clock();
     tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
@@ -530,18 +484,18 @@ void set_clock(TEMPO *tempo)
 
 void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], int QtdNinjas, int tiro_ninja[], int atualiza_sn[])
 {
-    int i, matou = 0;
+    int i;
     for(i = 0; i < QtdNinjas; i++)
     {
-        if (tiro_ninja[i] == 1 && ninja_morto[i]==0)
+        if (tiro_ninja[i] == 1)//funciona de maneira parecida com o tiro do jogador, porém é feita uma verificação separada para cada inimigo, pois todos podem atirar simultaneamente
         {
-            switch (dir_ninja[i])
+            switch (dir_ninja[i]) //é feita uma verificação na main para cada inimigo, localizando o jogador em relação a eles
             {
                 case 1: // atira pra esquerda
-                        if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs - 2] != '#')
+                        if (mapa[NINJA[i].Ys - 1][NINJA[i].Xs - 2] != '#') //tiro similar ao do jogador, "calculado" para o ninja[i]
                         {
                             textbackground(BLACK);
-
+                            //aqui não é feita a verificação para evitar apagar o inimigo como no jogador, pois a movimentação dos ninjas é computada rapidamente e, se for apagado, fica imperceptível
                             gotoxy(NINJA[i].Xs, NINJA[i].Ys);
                             printf(" ");
 
@@ -551,34 +505,34 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
                             textcolor(LIGHTGRAY);
                             printf("x");
 
-                            if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)
+                            if (NINJA[i].Xs == naruto->x && NINJA[i].Ys == naruto->y && covarde == 0)//tiro encontrou o jogador
                             {
                                 textbackground(BLACK);
                                 gotoxy(NINJA[i].Xs - 1, NINJA[i].Ys);
-                                printf(" ");
+                                printf(" "); // apaga a shuriken do ninja[i]
 
                                 gotoxy(naruto->x, naruto->y);
 
-                                printf(" ");
-                                naruto->vidas = naruto->vidas - 1;
-                                matou = 1;
-                                naruto->x = 2;
+                                printf(" "); // apaga o jogador
+
+                                naruto->vidas = naruto->vidas - 1; //tira uma vida do jogador
+
+                                tiro_ninja[i] = 0;//flags para finalizar o tiro e atualizar a posição das shurikens de cada inimigo
+                                atualiza_sn[i] = 1;
+
+                                naruto->x = 2;//retorna o jogador para o inicio
                                 naruto->y = 2;
                                 gotoxy(naruto->x, naruto->y);
                                 textbackground(YELLOW);
                                 printf(" ");
                             }
 
-                            NINJA[i].Xs--;
-                            if (matou == 1)
-                            {
-                                tiro_ninja[i] = 0;
-                                atualiza_sn[i] = 1;
-                            }
+                            NINJA[i].Xs--; //move a shuriken do ninja[i] para a esquerda
                         }
 
                         else
                         {
+                            //shuriken acertou a parede, mesmas operações de atualização de posições das shurikens
                             textbackground(BLACK);
                             gotoxy(NINJA[i].Xs, NINJA[i].Ys);
                             printf(" ");
@@ -613,18 +567,15 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
 
                                 printf(" ");
                                 naruto->vidas = naruto->vidas - 1;
-                                matou = 1;
+
+                                tiro_ninja[i] = 0;
+                                atualiza_sn[i] = 1;
+
                                 naruto->x = 2;
                                 naruto->y = 2;
                                 gotoxy(naruto->x, naruto->y);
                                 textbackground(YELLOW);
                                 printf(" ");
-                            }
-
-                            if (matou == 1)
-                            {
-                                tiro_ninja[i] = 0;
-                                atualiza_sn[i] = 1;
                             }
 
                             NINJA[i].Xs++;
@@ -646,10 +597,12 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
 }
 
 
+
 int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
 {
     int movimento;
-    //1a2d3s4w
+    /*Esta movimentação faz com que o ninja a uma determinada distância do naruto sempre busque estar na mesma linha que ele, fazendo com que o ninja esteja mais
+    propenso a realizar mais disparos. Além disso, quando ambos estão na mesma linha o ninja tenta se aproximar do personagem, tornando mais dificil a esquiva do projétil*/
     if((NINJA[n].y-naruto.y)>=1)
         movimento = 4; //W
     else if((NINJA[n].y-naruto.y)<=-1)
@@ -661,7 +614,7 @@ int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
     return movimento;
 }
 
-void cheat(char ch, int *estado, int *covarde)
+void cheat(char ch, int *estado, int *covarde) //Cria uma máquina de estados para implementação de cheats, apenas aceitando uma certa sequencia exata de caracteres para ativar ou desativar uma flag
 {
       switch (ch)
       {
@@ -785,6 +738,7 @@ int salva(char mapa[LIN][COL], float duracao, int level, int vidas, int pontos, 
         fprintf(arq, "%d", QtdNinjas);
         fprintf(arq, "%c", cn[0]);
 
+
         for(i = 0; i < QtdNinjas; i++)
         {
             fprintf(arq, "%d", tiro_ninja[i]);
@@ -861,11 +815,11 @@ int carrega(FILE *arq, char nome_save[], char mapa[LIN][COL], float *duracao, in
         fgets(read, COL, arq); //coleta a string da linha atual
         *shurikens = atoi(read); //converte a string para int
 
-       fgets(read, COL, arq); //coleta a string da linha atual
+        fgets(read, COL, arq); //coleta a string da linha atual
         pos_shuriken->x = atoi(read); //converte a string para int
 
         fgets(read, COL, arq); //coleta a string da linha atual
-        pos_shuriken->x = atoi(read); //converte a string para int
+        pos_shuriken->y = atoi(read); //converte a string para int
 
         fgets(read, COL, arq); //coleta a string da linha atual
         *flag_tiro = atoi(read); //converte a string para int
