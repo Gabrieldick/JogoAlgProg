@@ -14,7 +14,7 @@
 int main()
 {
     srand(time(NULL)); //mudei aqui
-    setlocale(LC_CTYPE, "");
+    setlocale(LC_CTYPE, ""); // TA
     int covarde = 0, estado=0, carregando = 0;
     TEMPO tempo, t_ammo, tempo_game, tiro_naruto;
     char mapa[LIN][COL], option, opt_menu;
