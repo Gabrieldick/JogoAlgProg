@@ -241,7 +241,7 @@ int main()
                 }
             }
 
-            set_clock(&tempo);
+            set_clock(&tempo); 
             set_clock(&t_ammo);
             set_clock(&tiro_naruto);
 
