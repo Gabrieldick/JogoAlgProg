@@ -32,7 +32,7 @@ void clearscreen();
 int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[]);
 void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *QtdNinjas, int *qtd_chaves, int ninja_morto[], int carregando);
 void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], int *chaves, int *qtd_chaves, int covarde);
-void atira(VETOR *pos_shuriken, int *ch, char prox_ch, char mapa[LIN][COL], VETOR NINJA[], int ninja_morto[], int *matou_todos, int *i, int *atualiza_xys, int QtdNinjas, PERSONAGEM *naruto);
+void atira(VETOR *pos_shuriken, int *ch, char prox_ch, char mapa[LIN][COL], VETOR NINJA[], int ninja_morto[], int *matou_todos, int *i, int QtdNinjas, PERSONAGEM *naruto);
 void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdNinjas, PERSONAGEM naruto);
 void set_clock(TEMPO *tempo);
 void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], int QtdNinjas, int tiro_ninja[], int atualiza_sn[]);
