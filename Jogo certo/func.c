@@ -374,9 +374,10 @@ void hidecursor() //Função para esconder o indicador da posição do cursor im
     SetConsoleCursorInfo(consoleHandle, &info);
 }
 
-void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdNinjas, PERSONAGEM naruto)
+void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdNinjas, PERSONAGEM naruto) //função para movimentação dos ninjas
 {
-    int mov_ninja, valid_move = 1, n = 0;
+    int mov_ninja, valid_move = 1, n = 0; //variaveis de controle
+    
     for (n = 0; n < QtdNinjas; n++)//faz a varredura dos inimigos
     {
         if (ninja_morto[n] == 0) //só realiza as operações para os ninjas que ainda não foram eliminados
@@ -482,9 +483,10 @@ void set_clock(TEMPO *tempo)//Deixa todos os cálculos prontos para a utilizaç�
     tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
 }
 
-void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], int QtdNinjas, int tiro_ninja[], int atualiza_sn[])
+void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM *naruto, VETOR NINJA[], int ninja_morto[], int QtdNinjas, int tiro_ninja[], int atualiza_sn[]) //executa os tiros dos ninjas
 {
     int i;
+    
     for(i = 0; i < QtdNinjas; i++)
     {
         if (tiro_ninja[i] == 1)//funciona de maneira parecida com o tiro do jogador, porém é feita uma verificação separada para cada inimigo, pois todos podem atirar simultaneamente
@@ -598,7 +600,7 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
 
 
 
-int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
+int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n) //movimentação inteligente para os ninjas
 {
     int movimento;
     /*Esta movimentação faz com que o ninja a uma determinada distância do naruto sempre busque estar na mesma linha que ele, fazendo com que o ninja esteja mais
