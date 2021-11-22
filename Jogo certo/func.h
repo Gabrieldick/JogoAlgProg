@@ -1,32 +1,33 @@
-#ifndef FUNC_H_INCLUDED
-#define FUNC_H_INCLUDED
-#define LIN 23
-#define COL 61
-#define QtdNinjasMAX 20
-#define TIME_GAME 1
-#define C 50
-#define INICIO 1
-#define FIM 4
-#define lvlMAX 99
-#define Vidas_inicio 3
+#ifndef FUNC_H_INCLUDED //define que o arquivo é um cabeçalho para uso
+#define FUNC_H_INCLUDED //define que o arquivo é um cabeçalho para uso
+#define LIN 23 //define a quantidade máxima de linhas
+#define COL 61 //define a quantidade máxima de colunas
+#define QtdNinjasMAX 20 //define a quantidade máxima de ninjas que pode existir
+#define TIME_GAME 1 //define a velocidade de movimentação para determinada quantidade de tempo
+#define C 50 //define o tamanho máximo do nome do mapa
+#define INICIO 1 //define quantidade inicial de possibilidades para movimento dos ninjas
+#define FIM 4 //define a quantidade final de possibilidades para movimento dos ninjas
+#define lvlMAX 99 //define a quantidade máxima de fases do jogo
+#define Vidas_inicio 3 //define a quantidade inicial de vidas do personagem
 
 typedef struct
 {
     clock_t comeco, fim;
     float duracao;
-} TEMPO;
+} TEMPO; //estrutura para contagem dos tempos de jogo
 
 typedef struct
 {
     int x, y;
     int vidas, pontos, shurikens;
-}PERSONAGEM;
+}PERSONAGEM; //estrutura para informações do personagem
 
 typedef struct
 {
     int x, y, Xs, Ys;
-}VETOR;
+}VETOR; //estrutura para posições
 
+//primeira chamada para declaração das funções
 void flush_in();
 void clearscreen();
 int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[]);
