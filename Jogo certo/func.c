@@ -616,78 +616,78 @@ int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
 
 void cheat(char ch, int *estado, int *covarde) //Cria uma máquina de estados para implementação de cheats, apenas aceitando uma certa sequencia exata de caracteres para ativar ou desativar uma flag
 {
-      switch (ch)
+      switch (ch) //verificação da máquina de estados
       {
             case 99: //c
             case 67: //C
-                  *estado = 1;
+                  *estado = 1; //sinaliza que esta ok e avança para o próximo estado
                   break;
 
             case 111: //o
             case 79: //O
-                  if(*estado ==1)
-                        *estado = 2;
+                  if(*estado ==1) //condição para avançar para o proximo estado
+                        *estado = 2; //sinaliza que esta ok e avança para o próximo estado
 
                   else
-                        *estado = 0;
+                        *estado = 0; //retorna para o estado inicial
 
                   break;
 
             case 118: //v
             case 86: //V
-                  if(*estado == 2)
-                        *estado = 3;
+                  if(*estado == 2) //condição para avançar para o proximo estado
+                        *estado = 3; //sinaliza que esta ok e avança para o próximo estado
 
                   else
-                        *estado = 0;
+                        *estado = 0; //retorna para o estado inicial
 
                   break;
 
             case 97: //a
             case 65: //A
-                  if(*estado == 3)
-                        *estado = 4;
+                  if(*estado == 3) //condição para avançar para o proximo estado
+                        *estado = 4; //sinaliza que esta ok e avança para o próximo estado
 
                   else
-                        *estado = 0;
+                        *estado = 0; //retorna para o estado inicial
 
                   break;
 
             case 114: //r
             case 82: //R
-                  if(*estado == 4)
-                        *estado = 5;
+                  if(*estado == 4) //condição para avançar para o proximo estado
+                        *estado = 5; //sinaliza que esta ok e avança para o próximo estado
 
                   else
-                        *estado = 0;
+                        *estado = 0; //retorna para o estado inicial
 
                   break;
 
             case 100: //d
             case 68: //D
-                  if(*estado == 5)
-                        *estado = 6;
+                  if(*estado == 5) //condição para avançar para o proximo estado
+                        *estado = 6; //sinaliza que esta ok e avança para o próximo estado
 
                   else
-                        *estado = 0;
+                        *estado = 0; //retorna para o estado inicial
                   break;
 
             case 101: //e
             case 69: //E
-                  if(*estado == 6)
+                  if(*estado == 6) //condição para avançar para o proximo estado
                         if(*covarde)
-                              *covarde = 0;
+                              *covarde = 0; //se o cheat estiver ativo, desativa
 
                         else
-                              *covarde = 1;
+                              *covarde = 1; //se o cheat estiver desativado, ativa
 
                   else
-                        *estado = 0;
+                        *estado = 0; //retorna para o estado inicial
 
                   break;
 
             default:
-                  *estado = 0;
+                  *estado = 0; //retorna para o estado inicial
                   break;
                 }
 }
