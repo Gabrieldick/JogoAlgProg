@@ -29,7 +29,7 @@ void clearscreen() //limpa a tela
     #endif
 }
 
-int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[])
+int copia_mapa (char mapa[LIN][COL], FILE *arq, char nome[]) //Esta função copia o mapa com o nome da string para a matriz usada no programa
 {
     int i, j;
     char cn[1] = { "\n" };
@@ -62,25 +62,24 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
 {
     int i, j, n = 0;
 
-    printf("\n");
-    gotoxy(1, 1);
+    gotoxy(1, 1); //Ajusta o cursor para a posição inicial
     for (i = 0; i < LIN; i++)
     {
         for (j = 0; j < COL; j++)
         {
-            if (mapa[i][j] == '#')
+            if (mapa[i][j] == '#') //printa as paredes
             {
                 textbackground(WHITE);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'J')
+            else if (mapa[i][j] == 'J')//printa e define a posição do jogador
             {
                 naruto->x = j+1;
                 naruto->y = i+1;
                 textbackground(YELLOW);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'N' && carregando == 0)
+            else if (mapa[i][j] == 'N' && carregando == 0)//printa e define as posições dos ninjas se o jogo não estiver sendo carregado
             {
                 NINJA[n].x = wherex();
                 NINJA[n].y = wherey();
@@ -89,7 +88,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 printf(" ");
                 *QtdNinjas = *QtdNinjas + 1;
             }
-            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && carregando == 1)
+            else if(i == (NINJA[n].y - 1) && j == (NINJA[n].x -1) && carregando == 1)//printa os ninjas em caso de jogo sendo carregado
             {
 
                 if(ninja_morto[n] == 0)
@@ -99,18 +98,18 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
                 }
                 n++;
             }
-             else if (mapa[i][j] == 'Z')
+             else if (mapa[i][j] == 'Z')//printa e define as posições das shurikens adicionais
             {
                 textbackground(GREEN);
                 printf(" ");
             }
-            else if (mapa[i][j] == 'C')
+            else if (mapa[i][j] == 'C')//printa e define as posições das chaves
             {
                 textbackground(BLUE);
                 printf(" ");
                 (*qtd_chaves)++;
             }
-            else if (mapa[i][j] == 'X')
+            else if (mapa[i][j] == 'X')//printa e define as posições das armadilhas
             {
                 textbackground(RED);
                 printf(" ");
@@ -118,7 +117,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
             else
             {
                 textbackground(BLACK);
-                printf("%c", mapa[i][j]); // testar se a impressão esta correta
+                printf("%c", mapa[i][j]); // printa os espaços sem nada
             }
         }
     }
@@ -127,21 +126,7 @@ void exibe_mapa(PERSONAGEM *naruto, char mapa[LIN][COL], VETOR NINJA[], int *Qtd
 
 }
 
-void le_nome(FILE *arq, char nome[])
-{
-    char i[2];
-
-
-    printf("\nSelecione o nível desejado para começar o jogo: ");
-    gets(i);
-
-    strcpy(nome, "mapa");
-    strcat(nome, i);
-    strcat(nome, ".txt");
-
-}
-
-char menu()
+char menu()// printa o menu do jogo
 {
     char option;
 
@@ -153,15 +138,15 @@ char menu()
     printf("\t\t\t\t\t\tV - Voltar");
     printf("\n\n\n\n\n\n\n\n\n\n\n");
 
-    option = getch();
+    option = getch(); //pega a opção sem printar ela na tela
 
     return option;
 }
 
-void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int *chaves, int *qtd_chaves, int covarde)
+void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], int *chaves, int *qtd_chaves, int covarde) //mexe o personagem principal pelo mapa
 {
-    int andou = 0;
-    switch ((ch))
+    int andou = 0; //inicia uma flag como falsa para o movimento do personagem
+    switch ((ch)) // sem o toupper para não dar conflito das setas com o "k" minúsculo utilizado no tiro
     {
         case 97:
         case 75:  // ArrowLeft
@@ -230,30 +215,25 @@ void anda(PERSONAGEM *naruto, char ch, char mapa[LIN][COL], VETOR *pos_arm, int 
                 andou = 1;
             }
             break;
-
-        case 27:
-            puts("-- ESC!");
-            puts("--- FIM!----");
-            break;
     }
 
     if(andou == 1)
     {
         if ((mapa[naruto->y - 1][naruto->x - 1] == 'X') && covarde == 0)
         {
-            naruto->vidas = naruto->vidas - 1;
+            naruto->vidas = naruto->vidas - 1; //tira vida do naruto quando pisa numa armadilha
         }
         else if (mapa[naruto->y - 1][naruto->x - 1] == 'C')
         {
-            naruto->pontos = naruto->pontos + 50;
+            naruto->pontos = naruto->pontos + 50; //adiciona os pontos caso pise em uma chave
             *chaves = *chaves + 1;
-            (*qtd_chaves)--;
+            (*qtd_chaves)--;//diminui a quantidade restantes de chaves no mapa
         }
         else if (mapa[naruto->y - 1][naruto->x - 1] == 'Z')
         {
-            naruto->shurikens++;
+            naruto->shurikens++;//incrementa a qtd de shurikens do personagem
         }
-        mapa[naruto->y - 1][naruto->x - 1] = 'J';
+        mapa[naruto->y - 1][naruto->x - 1] = 'J';//Atualiza a posição do naruto na matriz, fazendo com que o personagem tenha sua posição salva diretamente na matriz
     }
 }
 
@@ -308,7 +288,6 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
                         }
                         if (matou == 1)
                         {
-
                             *flag_tiro = 0;
                         }
 
@@ -393,7 +372,7 @@ void atira(VETOR *pos_shuriken, int *flag_tiro, char prox_ch, char mapa[LIN][COL
     }
 }
 
-void hidecursor()
+void hidecursor() //Função para esconder o indicador da posição do cursor implementada pelo professor
 {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
@@ -503,19 +482,7 @@ void anda_ninjas(VETOR NINJA[], char mapa[LIN][COL], int ninja_morto[], int QtdN
     }
 }
 
-void recarrega_ammo(PERSONAGEM *naruto, TEMPO *t_ammo)
-{
-    t_ammo->comeco = clock();
-    t_ammo->duracao = 0;
-    if (t_ammo->duracao < 1.75)
-    {
-        t_ammo->fim = clock();
-        t_ammo->duracao = (double)(t_ammo->fim - t_ammo->comeco) / CLOCKS_PER_SEC;
-    }
-    naruto->shurikens = 5;
-}
-
-void set_clock(TEMPO *tempo)
+void set_clock(TEMPO *tempo)//Deixa todos os cálculos pronts para a utilização de algum timer no jogo
 {
     tempo->fim = clock();
     tempo->duracao = (double)(tempo->fim - tempo->comeco) / CLOCKS_PER_SEC;
@@ -642,7 +609,8 @@ void atira_ninja (int covarde, int dir_ninja[], char mapa[LIN][COL], PERSONAGEM 
 int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
 {
     int movimento;
-    //1a2d3s4w
+    /*Esta movimentação faz com que o ninja a uma determinada distância do naruto sempre busque estar na mesma linha que ele, fazendo com que o ninja esteja mais
+    propenso a realizar mais disparos. Além disso, quando ambos estão na mesma linha o ninja tenta se aproximar do personagem, tornando mais dificil a esquiva do projétil*/
     if((NINJA[n].y-naruto.y)>=1)
         movimento = 4; //W
     else if((NINJA[n].y-naruto.y)<=-1)
@@ -654,7 +622,7 @@ int mov_inteligente(VETOR NINJA[], PERSONAGEM naruto, int n)
     return movimento;
 }
 
-void cheat(char ch, int *estado, int *covarde)
+void cheat(char ch, int *estado, int *covarde) //Cria uma máquina de estados para implementação de cheats, apenas aceitando uma certa sequencia exata de caracteres para ativar ou desativar uma flag
 {
       switch (ch)
       {

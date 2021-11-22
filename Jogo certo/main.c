@@ -13,7 +13,7 @@
 
 int main()
 {
-    srand(time(NULL));
+    srand(time(NULL)); //mudei aqui
     setlocale(LC_CTYPE, "");
     int covarde = 0, estado=0, carregando = 0;
     TEMPO tempo, t_ammo, tempo_game, tiro_naruto;
@@ -76,7 +76,7 @@ int main()
             case 'C':
                 clearscreen();
                 arq = fopen(nome_save, "r");
-                if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &ch_tiro, &QtdNinjas)) //carrega os dados b√°sicos do jogo
+                if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &ch_tiro, &QtdNinjas)) //carrega os dados b·sicos do jogo
                     printf("\nErro ao carregar jogo!\n");
 
                 else if(carrega_ninja(arq, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //Carrega os objetos em movimento do jogo
@@ -97,13 +97,13 @@ int main()
 
             default:
                 clearscreen();
-                printf("Op√ß√£o invalida, digite novamente!");
+                printf("OpÁ„o invalida, digite novamente!");
                 erro = 1;
         }
 
     }while (erro ==1);
 
-    tempo_game.comeco = clock(); //Come√ßa a contar o tempo de jogo;
+    tempo_game.comeco = clock(); //ComeÁa a contar o tempo de jogo;
 
     level_inicial = level;
 
@@ -123,7 +123,7 @@ int main()
             }
         }
 
-        // carrega o pr√≥ximo mapa
+        // carrega o prÛximo mapa
         sprintf(nome, "mapa%d", level);
         strcat(nome, ".txt");
         arq = fopen(nome, "r");
@@ -146,37 +146,37 @@ int main()
         }
 
         //loop em que o jogo funciona
-        while (ch != 27 && qtd_chaves>0 && naruto.vidas > 0 && carregando == 0)
+        while (qtd_chaves>0 && naruto.vidas > 0 && carregando == 0)
         {
             for (l = 0; l < LIN; l++)
             {
                 for (c = 0; c < COL; c++)
                 {
-                    if (mapa[l][c] == 'X') //n√£o deixa as armadilhas sumirem
+                    if (mapa[l][c] == 'X') //n„o deixa as armadilhas sumirem
                     {
                         gotoxy(c+1, l+1);
                         textbackground(RED);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == 'C')//n√£o deixa as chaves sumirem
+                    else if (mapa[l][c] == 'C')//n„o deixa as chaves sumirem
                     {
                         gotoxy(c+1, l+1);
                         textbackground(BLUE);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == 'Z')//n√£o deixa as shurikens sumirem
+                    else if (mapa[l][c] == 'Z')//n„o deixa as shurikens sumirem
                     {
                         gotoxy(c+1, l+1);
                         textbackground(GREEN);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == '#')
+                    else if (mapa[l][c] == '#')//evita quaisquer bugs com a parede
                     {
                         gotoxy(c+1, l+1);
                         textbackground(WHITE);
                         printf(" ");
                     }
-                    else if (mapa[l][c] == 'J' && covarde == 1)//n√£o deixa o jogador sumir quando covarde est√° ativo
+                    else if (mapa[l][c] == 'J' && covarde == 1)//n„o deixa o jogador sumir quando covarde est· ativo
                     {
                         gotoxy(c+1, l+1);
                         textbackground(YELLOW);
@@ -199,7 +199,7 @@ int main()
             textbackground(BLACK);
             textcolor(WHITE);
             gotoxy(65, 1);
-            printf("N√≠vel atual: %d\t", level);
+            printf("NÌvel atual: %d\t", level);
             if(covarde)
             {
                   gotoxy(65, 2);
@@ -256,7 +256,7 @@ int main()
 
                 switch (ch)
                 {
-                    case 32: // espa√ßo
+                    case 32: // espaÁo
                     case 107: //k
                         if (naruto.shurikens > 0)
                         {
@@ -299,7 +299,7 @@ int main()
                                 case 'C':
                                     clearscreen();
                                     arq = fopen(nome_save, "r");
-                                    if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &ch_tiro, &QtdNinjas)) //carrega os dados b√°sicos do jogo
+                                    if(carrega(arq, nome_save, mapa, &save_time, &level,  &naruto.vidas, &naruto.pontos, &chaves, &matou_todos, &naruto.shurikens, &pos_shuriken, &flag_tiro, &ch_tiro, &QtdNinjas)) //carrega os dados b·sicos do jogo
                                         printf("\nErro ao carregar jogo!\n");
 
                                     else if(carrega_ninja(arq, QtdNinjas, tiro_ninja, ninja_morto, dir_ninja, atualiza_sn, NINJA)) //Carrega os objetos em movimento do jogo
@@ -308,7 +308,7 @@ int main()
                                     else
                                     {
                                         fclose(arq);
-                                        tempo_game.comeco = clock(); //recome√ßa a contar o tempo de jogo
+                                        tempo_game.comeco = clock(); //recomeÁa a contar o tempo de jogo
                                         carregando = 1;
                                         level --;
                                         erro = 0;
@@ -353,7 +353,7 @@ int main()
                                         dir_ninja[i] = 0;
                                         atualiza_sn[i] = 1;
                                     }
-                                    tempo_game.comeco = clock(); //recome√ßa a contar o tempo de jogo
+                                    tempo_game.comeco = clock(); //recomeÁa a contar o tempo de jogo
                                     break;
 
                                 default:
@@ -363,7 +363,7 @@ int main()
                         break;
 
                     default:
-                        anda(&naruto, ch, mapa, &pos_arm, &chaves, &qtd_chaves, covarde);
+                        anda(&naruto, ch, mapa, &chaves, &qtd_chaves, covarde);
                         ch = toupper(ch);
                         if (ch == 'A' || ch == 'D' || ch == 77 || ch == 75)
                             prox_ch = ch;
